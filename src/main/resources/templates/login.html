@@ -11,7 +11,10 @@
     <div class="col-6 mx-auto">
       <h1>Formulaire de connexion</h1>
       <div th:if="${param.error}">
-        <div class="alert alert-danger">Invalid Email or Password !!!</div>
+        <div class="alert alert-danger">L'adresse e-mail ou le mot de passe saisi est incorrect !</div>
+      </div>
+      <div th:if="${param.logout}">
+        <div class="alert alert-success">Déconnexion réussie !</div>
       </div>
       <form class="form-horizontal" method="post" role="form" th:action="@{/login}">
         <div class="mb-3">

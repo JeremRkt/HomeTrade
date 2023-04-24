@@ -1,6 +1,6 @@
 package com.isep.hometrade.web;
 
-import com.isep.hometrade.business.UserEntity;
+import com.isep.hometrade.business.User;
 import com.isep.hometrade.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,15 +30,16 @@ public class MainController {
 
     @GetMapping("/registration")
     public String registration(Model model) {
-        model.addAttribute("user", new UserEntity());
+        User user = new User();
+        model.addAttribute("user", user);
         return "registration";
     }
 
     @PostMapping("/registration")
-    public String processRegistration(@ModelAttribute("user") @Valid UserEntity user, BindingResult result, Model model) {
-        UserEntity existingUser = userService.findByEmail(user.getEmail());
+    public String processRegistration(@ModelAttribute("user") @Valid User user, BindingResult result, Model model) {
+        User existingUser = userService.findUserByEmail(user.getEmail());
         if (existingUser != null) {
-            result.rejectValue("email", null,"Cette adresse e-mail est déja associée à un compte !");
+            result.rejectValue("email", null,"L'adresse e-mail saies est déjà associée à un compte !");
         }
         if (result.hasErrors()) {
             model.addAttribute("user", user);
@@ -46,11 +47,6 @@ public class MainController {
         }
         userService.saveUser(user);
         return "redirect:/registration?success";
-    }
-
-    @GetMapping("/welcomeLogged")
-    public String welcomeLogged() {
-        return "welcomeLogged";
     }
 
     @GetMapping("/profile")

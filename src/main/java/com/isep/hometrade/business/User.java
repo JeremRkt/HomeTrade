@@ -1,30 +1,32 @@
 package com.isep.hometrade.business;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Pattern;
 
 import java.io.Serializable;
 
 @Entity
-@Table(name = "user")
-public class UserEntity implements Serializable {
+public class User implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     private Long idUser;
-    @Column(nullable = false)
+    @NotEmpty(message = "Le nom saisi n'est pas valide !")
     private String firstname;
-    @Column(nullable = false)
+    @NotEmpty(message = "Le prénom saisi n'est pas valide !")
     private String lastname;
-    @Column(nullable = false, unique = true)
+    @NotEmpty(message = "L'adresse e-mail saisie n'est pas valide !")
+    @Email
     private String email;
-    @Column(nullable = false)
+    @NotEmpty(message = "Le mot de passe saisi n'est pas valide !")
     private String password;
 
-    // Constructor
-    public UserEntity(){
+    public User(){
     }
 
-    public UserEntity(String firstname, String lastname, String email, String password) {
+    public User(String firstname, String lastname, String email, String password) {
         this.firstname = firstname;
         this.lastname = lastname;
         this.email = email;

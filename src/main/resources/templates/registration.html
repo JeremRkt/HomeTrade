@@ -19,10 +19,16 @@
                 <div class="mb-3">
                     <label class="form-label" for="firstname">Nom</label>
                     <input class="form-control" id="firstname" name="firstname" type="text">
+                    <p class="text-danger" th:errors="*{firstname}"
+                       th:if="${#fields.hasErrors('firstname')}">
+                    </p>
                 </div>
                 <div class="mb-3">
                     <label class="form-label" for="lastname">Prénom</label>
                     <input class="form-control" id="lastname" name="lastname" type="text">
+                    <p class="text-danger" th:errors="*{lastname}"
+                       th:if="${#fields.hasErrors('lastname')}">
+                    </p>
                 </div>
                 <div class="mb-3">
                     <label class="form-label" for="email">Adresse e-mail</label>
@@ -34,6 +40,9 @@
                 <div class="mb-3">
                     <label class="col-sm-2 col-form-label" for="password">Mot de passe</label>
                     <input class="form-control" id="password" name="password" type="password">
+                    <p class="text-danger" th:errors="*{password}"
+                       th:if="${#fields.hasErrors('password')}">
+                    </p>
                 </div>
                 <div class="mb-3">
                     <button class="btn btn-primary mb-3" type="submit">S'inscrire</button>
