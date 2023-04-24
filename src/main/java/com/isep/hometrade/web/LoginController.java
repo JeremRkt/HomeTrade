@@ -38,7 +38,7 @@ public class LoginController {
             model.addAttribute("user", user);
             return "/login";
         }
-        return "redirect:/login?success";
+        return "redirect:/welcomeLogged";
     }
 
 }

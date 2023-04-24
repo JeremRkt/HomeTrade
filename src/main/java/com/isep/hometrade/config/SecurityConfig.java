@@ -1,4 +1,4 @@
-package com.isep.hometrade.web;
+package com.isep.hometrade.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
