@@ -25,6 +25,12 @@ public class SecurityConfig {
                         .requestMatchers("/**").permitAll()
                         .anyRequest().authenticated()
                 )
+                .formLogin((form) -> form
+                        .loginPage("/")
+                        .loginProcessingUrl("/login")
+                        .defaultSuccessUrl("/profile")
+                        .permitAll()
+                )
                 .logout(LogoutConfigurer::permitAll)
                 .exceptionHandling().accessDeniedPage("/access-denied");
         return http.build();

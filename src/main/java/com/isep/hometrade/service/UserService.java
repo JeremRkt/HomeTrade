@@ -20,10 +20,6 @@ public class UserService {
         userRepository.save(u);
     }
 
-    public boolean isPasswordCorrect(UserEntity user, String password) {
-        return passwordEncoder.matches(password, user.getPassword());
-    }
-
     public UserEntity findByEmail(String email) {
         return userRepository.findByEmail(email);
     }
