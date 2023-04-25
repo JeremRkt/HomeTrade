@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="fr" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Accueil</title>
@@ -15,8 +15,14 @@
         </div>
 
         <div class="col-md-3 text-end">
-            <button type="button" class="btn btn-outline-primary me-2" onclick="window.location.href='/login';">Se connecter</button>
-            <button type="button" class="btn btn-primary" onclick="window.location.href='/registration';">S'inscire</button>
+            <div sec:authorize="isAuthenticated()">
+                <button type="button" class="btn btn-outline-primary me-2" onclick="window.location.href='/profile';">Mon profil</button>
+                <a href="#" th:href="@{/logout}" class="btn btn-primary">Se déconnecter</a>
+            </div>
+            <div sec:authorize="!isAuthenticated()">
+                <button type="button" class="btn btn-outline-primary me-2" onclick="window.location.href='/login';">Se connecter</button>
+                <button type="button" class="btn btn-primary" onclick="window.location.href='/registration';">S'inscrire</button>
+            </div>
         </div>
     </header>
 </div>
