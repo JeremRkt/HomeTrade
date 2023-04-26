@@ -5,15 +5,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.Collections;
 
-public class CustomUserDetails implements UserDetails {
-
-    private final String username;
-    private final String password;
-
-    public CustomUserDetails(String username, String password) {
-        this.username = username;
-        this.password = password;
-    }
+public record CustomUserDetails(String username, String password) implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
