@@ -1,11 +1,9 @@
 package com.isep.hometrade.service;
 
-import com.isep.hometrade.business.User;
+import com.isep.hometrade.business.UserEntity;
 import com.isep.hometrade.dao.UserRepository;
+import com.isep.hometrade.util.UserDto;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -21,12 +19,13 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public void saveUser(User user) {
-        User u = new User(user.getFirstname(), user.getLastname(),user.getEmail(), passwordEncoder.encode(user.getPassword()));
-        userRepository.save(u);
+    public void saveUser(UserDto userDto) {
+        UserEntity userEntity = new UserEntity(userDto.getIdUser(), userDto.getFirstname(), userDto.getLastname(),userDto.getEmail(), passwordEncoder.encode(userDto.getPassword()), 1);
+        userRepository.save(userEntity);
     }
 
-    public User findUserByEmail(String email) {
+    public UserEntity findUserByEmail(String email) {
         return userRepository.findByEmail(email);
     }
+
 }

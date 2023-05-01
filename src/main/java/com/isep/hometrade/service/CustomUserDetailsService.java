@@ -1,6 +1,6 @@
 package com.isep.hometrade.service;
 
-import com.isep.hometrade.business.User;
+import com.isep.hometrade.business.UserEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -19,7 +19,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        User user = userService.findUserByEmail(email);
+        UserEntity user = userService.findUserByEmail(email);
         if (user == null) {
             throw new UsernameNotFoundException("User not found");
         }

@@ -15,14 +15,8 @@
     </div>
 
     <div class="col-md-3 text-end">
-      <div sec:authorize="isAuthenticated()">
-        <button type="button" class="btn btn-outline-primary me-2" onclick="window.location.href='/profile';">Mon profil</button>
-        <a href="#" th:href="@{/logout}" class="btn btn-primary">Se déconnecter</a>
-      </div>
-      <div sec:authorize="!isAuthenticated()">
-        <button type="button" class="btn btn-outline-primary me-2" onclick="window.location.href='/login';">Se connecter</button>
-        <button type="button" class="btn btn-primary" onclick="window.location.href='/registration';">S'inscrire</button>
-      </div>
+      <button type="button" class="btn btn-outline-primary me-2" onclick="window.location.href='/profile';">Mon profil</button>
+      <a href="#" th:href="@{/logout}" class="btn btn-primary">Se déconnecter</a>
     </div>
   </header>
 </div>
@@ -30,7 +24,10 @@
   <div class="row mt-5">
     <div class="col-6 mx-auto">
       <h1>User Details</h1>
-      <div class="mt-2">Adresse-mail : <span sec:authentication="principal.username"></span></div>
+      <p>Prénom : <span th:text="${user.firstname}"></span></p>
+      <p>Nom : <span th:text="${user.lastname}"></span></p>
+      <p>Adresse e-mail : <span th:text="${user.email}"></span></p>
+      <a href="/add-house" class="btn btn-primary">Ajouter une maison</a>
     </div>
   </div>
 </div>
