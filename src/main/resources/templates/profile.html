@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns:th="http://www.thymeleaf.org">
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
   <title>Accueil</title>
@@ -15,21 +15,55 @@
     </div>
 
     <div class="col-md-3 text-end">
-      <button type="button" class="btn btn-outline-primary me-2" onclick="window.location.href='/profile';">Mon profil</button>
+      <a href="/profile" class="btn btn-outline-primary me-2">Mon profil</a>
       <a href="#" th:href="@{/logout}" class="btn btn-primary">Se déconnecter</a>
     </div>
   </header>
 </div>
 <div class="container">
   <div class="row mt-5">
-    <div class="col-6 mx-auto">
-      <h1>User Details</h1>
-      <p>Prénom : <span th:text="${user.firstname}"></span></p>
-      <p>Nom : <span th:text="${user.lastname}"></span></p>
-      <p>Adresse e-mail : <span th:text="${user.email}"></span></p>
-      <a href="/add-house" class="btn btn-primary">Ajouter une maison</a>
+    <div class="col-md-6">
+      <div class="card mb-4">
+        <div class="card-header">
+          <h2>Informations personnelles</h2>
+        </div>
+        <div class="card-body">
+          <div class="row align-items-center">
+            <div class="col-md-4">
+              <img src="https://via.placeholder.com/150" class="img-fluid rounded-circle mb-3" alt="Photo de profil">
+            </div>
+            <div class="col-md-8">
+              <p><strong>Prénom :</strong> <span th:text="${user.firstname}"></span></p>
+              <p><strong>Nom :</strong> <span th:text="${user.lastname}"></span></p>
+              <p><strong>Adresse e-mail :</strong> <span th:text="${user.email}"></span></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="card mb-4">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <h2 class="mb-0">Maison</h2>
+          <a href="/add-house" class="btn btn-primary">Ajouter</a>
+        </div>
+        <div class="card-body">
+          <div class="row mb-3 d-flex">
+            <div class="col-md-12 mb-3" th:each="house : ${houses}">
+              <div class="card">
+                <img src="https://via.placeholder.com/500x300" class="card-img-top" th:if="${not house.photoEntities.isEmpty()}" th:src="${house.photoEntities.iterator().next().link}" alt="Photo de la maison">
+                <div class="card-body">
+                  <h5 class="card-title" th:text="${house.title}">Maison</h5>
+                  <p class="card-text" th:text="${house.description}">Description de la maison.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
 </body>
 </html>
+

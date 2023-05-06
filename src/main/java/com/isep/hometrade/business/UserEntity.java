@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Set;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -32,6 +34,13 @@ public class UserEntity {
     private String password;
 
     @Column(name = "type", nullable = false)
-    private Integer type;
+    private int type;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_photo")
+    private PhotoEntity photoEntity;
+
+    @OneToMany(mappedBy = "userEntity", cascade = CascadeType.ALL)
+    private Set<HouseEntity> houseEntities;
 
 }

@@ -1,4 +1,4 @@
-package com.isep.hometrade.util;
+package com.isep.hometrade.map;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
@@ -13,8 +13,6 @@ import lombok.Setter;
 @AllArgsConstructor
 public class UserDto {
 
-    private int idUser;
-
     @NotEmpty(message = "Le prénom saisi n'est pas valide !")
     private String firstname;
 
@@ -27,7 +25,5 @@ public class UserDto {
 
     @NotEmpty(message = "Le mot de passe saisi n'est pas valide")
     private String password;
-
-    private Integer type;
 
 }

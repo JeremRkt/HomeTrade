@@ -16,12 +16,12 @@
 
         <div class="col-md-3 text-end">
             <div sec:authorize="isAuthenticated()">
-                <button type="button" class="btn btn-outline-primary me-2" onclick="window.location.href='/profile';">Mon profil</button>
+                <a href="/profile" class="btn btn-outline-primary me-2">Mon profil</a>
                 <a href="#" th:href="@{/logout}" class="btn btn-primary">Se déconnecter</a>
             </div>
             <div sec:authorize="!isAuthenticated()">
-                <button type="button" class="btn btn-outline-primary me-2" onclick="window.location.href='/login';">Se connecter</button>
-                <button type="button" class="btn btn-primary" onclick="window.location.href='/registration';">S'inscrire</button>
+                <a href="/login" class="btn btn-outline-primary me-2">Se connecter</a>
+                <a href="/registration" class="btn btn-primary">S'inscrire</a>
             </div>
         </div>
     </header>

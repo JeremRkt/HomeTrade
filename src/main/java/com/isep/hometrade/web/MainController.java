@@ -1,20 +1,21 @@
 package com.isep.hometrade.web;
 
+import com.isep.hometrade.business.HouseEntity;
 import com.isep.hometrade.business.UserEntity;
 import com.isep.hometrade.service.HouseService;
 import com.isep.hometrade.service.UserService;
-import com.isep.hometrade.util.HouseDto;
-import com.isep.hometrade.util.UserDto;
+import com.isep.hometrade.map.HouseDto;
+import com.isep.hometrade.map.UserDto;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+
+import java.io.IOException;
+import java.util.Set;
 
 @Controller
 public class MainController {
@@ -68,7 +69,9 @@ public class MainController {
     @GetMapping("/profile")
     public String profile(Model model, Authentication authentication) {
         UserEntity user = userService.findUserByEmail(authentication.getName());
+        Set<HouseEntity> houses = userService.findHousesByEmail(authentication.getName());
         model.addAttribute("user", user);
+        model.addAttribute("houses", houses);
         return "profile";
     }
 
@@ -79,12 +82,13 @@ public class MainController {
     }
 
     @PostMapping("/add-house")
-    public String processAddHouse(@Valid @ModelAttribute("house") HouseDto houseDto, BindingResult result, Model model) {
+    public String processAddHouse(@Valid @ModelAttribute("house") HouseDto houseDto, Authentication authentication, BindingResult result, Model model) throws IOException {
         if (result.hasErrors()) {
             model.addAttribute("house", houseDto);
             return "/add-house";
         }
-        houseService.saveHouse(houseDto);
+        UserEntity user = userService.findUserByEmail(authentication.getName());
+        houseService.saveHouse(houseDto,user);
         return "redirect:/add-house?success";
     }
 

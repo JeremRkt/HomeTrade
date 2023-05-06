@@ -20,7 +20,7 @@ public class AddressEntity {
     private int idAddress;
 
     @Column(name = "number", nullable = false)
-    private int number;
+    private String number;
 
     @Column(name = "street", nullable = false)
     private String street;
@@ -29,7 +29,7 @@ public class AddressEntity {
     private String city;
 
     @Column(name = "code", nullable = false)
-    private int code;
+    private String code;
 
     @Column(name = "country", nullable = false)
     private String country;

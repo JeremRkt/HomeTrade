@@ -18,7 +18,7 @@
 <div class="container">
   <div class="row mt-5">
     <div class="col-6 mx-auto">
-      <form method="post" role="form" th:action="@{/add-house}" th:object="${house}">
+      <form method="post" role="form" th:action="@{/add-house}" th:object="${house}" enctype="multipart/form-data">
         <h1>Formulaire d'ajout</h1>
         <div th:if="${param.success}">
           <div class="alert alert-info">
@@ -40,10 +40,10 @@
           </p>
         </div>
         <div class="mb-3">
-          <label class="form-label" for="photo">Photo</label>
-          <input class="form-control" id="photo" name="photo" type="text">
-          <p class="text-danger" th:errors="*{photo}"
-             th:if="${#fields.hasErrors('photo')}">
+          <label class="form-label" for="photoEntities">Photos</label>
+          <input class="form-control-file" id="photoEntities" name="photoEntities" type="file" multiple>
+          <p class="text-danger" th:errors="*{photoEntities}"
+             th:if="${#fields.hasErrors('photoEntities')}">
           </p>
         </div>
         <div class="mb-3">

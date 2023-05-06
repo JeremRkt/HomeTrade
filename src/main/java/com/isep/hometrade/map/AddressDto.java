@@ -1,4 +1,4 @@
-package com.isep.hometrade.util;
+package com.isep.hometrade.map;
 
 import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
@@ -12,10 +12,8 @@ import lombok.Setter;
 @AllArgsConstructor
 public class AddressDto {
 
-    private int idAddress;
-
     @NotEmpty(message = "Le numéro saisi n'est pas valide !")
-    private int number;
+    private String number;
 
     @NotEmpty(message = "La rue saisie n'est pas valide !")
     private String street;
@@ -24,7 +22,7 @@ public class AddressDto {
     private String city;
 
     @NotEmpty(message = "Le code postal saisi n'est pas valide !")
-    private int code;
+    private String code;
 
     @NotEmpty(message = "Le pays saisi n'est pas valide !")
     private String country;

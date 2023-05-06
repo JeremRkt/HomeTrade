@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Set;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -16,8 +18,8 @@ public class HouseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_home")
-    private Integer idHome;
+    @Column(name = "id_house")
+    private Integer idHouse;
 
     @Column(name = "title", nullable = false)
     private String title;
@@ -25,11 +27,15 @@ public class HouseEntity {
     @Column(name = "description")
     private String description;
 
-    @Column(name = "photo")
-    private String photo;
-
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_address", nullable = false)
     private AddressEntity addressEntity;
+
+    @OneToMany(mappedBy = "houseEntity", cascade = CascadeType.ALL)
+    private Set<PhotoEntity> photoEntities;
+
+    @ManyToOne
+    @JoinColumn(name = "id_user")
+    private UserEntity userEntity;
 
 }
