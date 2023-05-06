@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="fr" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
   <title>Nouvelle maison</title>
@@ -25,64 +25,44 @@
             Ajout réussie !
           </div>
         </div>
-        <div class="mb-3">
-          <label class="form-label" for="title">Titre</label>
-          <input class="form-control" id="title" name="title" type="text">
-          <p class="text-danger" th:errors="*{title}"
-             th:if="${#fields.hasErrors('title')}">
-          </p>
+        <div class="row">
+          <div class="col-md-6">
+            <label class="col-form-label" for="title">Titre</label>
+            <input class="form-control" id="title" name="title" type="text">
+            <p class="text-danger" th:errors="*{title}" th:if="${#fields.hasErrors('title')}"></p>
+
+            <label class="col-form-label" for="description">Description</label>
+            <input class="form-control" id="description" name="description" type="text">
+            <p class="text-danger" th:errors="*{description}" th:if="${#fields.hasErrors('description')}"></p>
+
+            <label class="col-form-label" for="photoEntities">Photos</label>
+            <input class="form-control-file" id="photoEntities" name="photoEntities" type="file" multiple>
+            <p class="text-danger" th:errors="*{photoEntities}" th:if="${#fields.hasErrors('photoEntities')}"></p>
+//pas se casser la tete reprendre le formulaire de registration et cleaner tout ce qui a été fait plus rajouter la photo de profil dans registration et trouver des exemples de photos !
+          </div>
+          <div class="col-md-6">
+            <label class="col-form-label" for="addressEntity.number">Numéro</label>
+            <input class="form-control" id="addressEntity.number" name="addressEntity.number" type="number">
+            <p class="text-danger" th:errors="*{addressEntity.number}" th:if="${#fields.hasErrors('addressEntity.number')}"></p>
+
+            <label class="col-form-label" for="addressEntity.street">Rue</label>
+            <input class="form-control" id="addressEntity.street" name="addressEntity.street" type="text">
+            <p class="text-danger" th:errors="*{addressEntity.street}" th:if="${#fields.hasErrors('addressEntity.street')}"></p>
+
+            <label class="col-form-label" for="addressEntity.city">Ville</label>
+            <input class="form-control" id="addressEntity.city" name="addressEntity.city" type="text">
+            <p class="text-danger" th:errors="*{addressEntity.city}" th:if="${#fields.hasErrors('addressEntity.city')}"></p>
+
+            <label class="col-form-label" for="addressEntity.code">Code postal</label>
+            <input class="form-control" id="addressEntity.code" name="addressEntity.code" type="number">
+            <p class="text-danger" th:errors="*{addressEntity.code}" th:if="${#fields.hasErrors('addressEntity.code')}"></p>
+
+          </div>
         </div>
-        <div class="mb-3">
-          <label class="form-label" for="description">Description</label>
-          <input class="form-control" id="description" name="description" type="text">
-          <p class="text-danger" th:errors="*{description}"
-             th:if="${#fields.hasErrors('description')}">
-          </p>
-        </div>
-        <div class="mb-3">
-          <label class="form-label" for="photoEntities">Photos</label>
-          <input class="form-control-file" id="photoEntities" name="photoEntities" type="file" multiple>
-          <p class="text-danger" th:errors="*{photoEntities}"
-             th:if="${#fields.hasErrors('photoEntities')}">
-          </p>
-        </div>
-        <div class="mb-3">
-          <label class="col-sm-2 col-form-label" for="addressEntity.number">Numéro</label>
-          <input class="form-control" id="addressEntity.number" name="addressEntity.number" type="number">
-          <p class="text-danger" th:errors="*{addressEntity.number}"
-             th:if="${#fields.hasErrors('addressEntity.number')}">
-          </p>
-        </div>
-        <div class="mb-3">
-          <label class="col-sm-2 col-form-label" for="addressEntity.street">Rue</label>
-          <input class="form-control" id="addressEntity.street" name="addressEntity.street" type="text">
-          <p class="text-danger" th:errors="*{addressEntity.street}"
-             th:if="${#fields.hasErrors('addressEntity.street')}">
-          </p>
-        </div>
-        <div class="mb-3">
-          <label class="col-sm-2 col-form-label" for="addressEntity.city">Ville</label>
-          <input class="form-control" id="addressEntity.city" name="addressEntity.city" type="text">
-          <p class="text-danger" th:errors="*{addressEntity.city}"
-             th:if="${#fields.hasErrors('addressEntity.city')}">
-          </p>
-        </div>
-        <div class="mb-3">
-          <label class="col-sm-2 col-form-label" for="addressEntity.code">Code postal</label>
-          <input class="form-control" id="addressEntity.code" name="addressEntity.code" type="number">
-          <p class="text-danger" th:errors="*{addressEntity.code}"
-             th:if="${#fields.hasErrors('addressEntity.code')}">
-          </p>
-        </div>
-        <div class="mb-3">
-          <label class="col-sm-2 col-form-label" for="addressEntity.country">Pays</label>
-          <input class="form-control" id="addressEntity.country" name="addressEntity.country" type="text">
-          <p class="text-danger" th:errors="*{addressEntity.country}"
-             th:if="${#fields.hasErrors('addressEntity.country')}">
-          </p>
-        </div>
-        <div class="mb-3">
-          <button class="btn btn-primary mb-3" type="submit">Ajouter</button>
+        <div class="d-flex justify-content-center align-items-center mt-2">
+          <div class="mb-3">
+            <button class="btn btn-primary mb-3" type="submit">Ajouter</button>
+          </div>
         </div>
       </form>
     </div>
