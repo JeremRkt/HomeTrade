@@ -45,6 +45,7 @@ public class HouseService {
         houseRepository.save(houseEntity);
         Set<PhotoEntity> photoEntities = new HashSet<>();
         for (MultipartFile multipartFile : houseDto.getPhotoEntities()) {
+            !!!!!Vérifier dans le controller pas ici
             if (multipartFile != null && !multipartFile.isEmpty()) {
                 String name = StringUtils.cleanPath(Objects.requireNonNull(multipartFile.getOriginalFilename()));
                 String genericPath = "images/house-" + houseEntity.getIdHouse();
