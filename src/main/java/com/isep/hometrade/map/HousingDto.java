@@ -2,28 +2,27 @@ package com.isep.hometrade.map;
 
 import com.isep.hometrade.business.AddressEntity;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.util.List;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class HouseDto {
+public class HousingDto {
 
-    @NotEmpty(message = "L'intitulé saisi n'est pas valide !")
-    private String title;
+    @NotEmpty(message = "Type non valide !")
+    private String type;
 
-    @NotEmpty(message = "La description saisie n'est pas valide !")
+    @NotEmpty(message = "Nom non valide !")
+    private String name;
+
+    @NotEmpty(message = "Description non valide !")
     private String description;
 
     private AddressEntity addressEntity;
-
-    private List<MultipartFile> photoEntities;
 
 }

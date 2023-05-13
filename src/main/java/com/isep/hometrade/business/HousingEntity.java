@@ -13,29 +13,35 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "house")
-public class HouseEntity {
+@Table(name = "housing")
+public class HousingEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_house")
-    private Integer idHouse;
+    @Column(name = "id_housing")
+    private Long idHousing;
 
-    @Column(name = "title", nullable = false)
-    private String title;
+    @Column(name = "type", nullable = false)
+    private String type;
+
+    @Column(name = "name", nullable = false)
+    private String name;
 
     @Column(name = "description")
     private String description;
+
+    @Column(name = "uuid")
+    private String uuid;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_address", nullable = false)
     private AddressEntity addressEntity;
 
-    @OneToMany(mappedBy = "houseEntity", cascade = CascadeType.ALL)
-    private Set<PhotoEntity> photoEntities;
-
     @ManyToOne
     @JoinColumn(name = "id_user")
     private UserEntity userEntity;
+
+    @OneToMany(mappedBy = "housingEntity", cascade = CascadeType.ALL)
+    private Set<PhotoEntity> photoEntities;
 
 }

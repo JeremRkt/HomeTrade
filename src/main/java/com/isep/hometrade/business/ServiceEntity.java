@@ -11,19 +11,16 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "photo")
-public class PhotoEntity {
+@Table(name = "service")
+public class ServiceEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_photo")
-    private Long idPhoto;
+    @Column(name = "id_service")
+    private Long idService;
 
     @Column(name = "name", nullable = false)
     private String name;
-
-    @Column(name = "path", nullable = false)
-    private String path;
 
     @ManyToOne
     @JoinColumn(name = "id_housing")

@@ -1,65 +1,86 @@
 <!doctype html>
-<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<html lang="fr" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <title>Inscription</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
 </head>
 <body>
-<div class="container">
-    <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
-        <div class="col-md-3 mb-2 mb-md-0">
-            <a href="/" class="d-inline-flex link-body-emphasis text-decoration-none">
-                <h1>Home Trade</h1>
-            </a>
-        </div>
-    </header>
-</div>
-<div class="container">
-    <div class="row mt-5">
-        <div class="col-6 mx-auto">
-            <form method="post" role="form" th:action="@{/registration}" th:object="${user}">
-                <h1>Formulaire d'inscription</h1>
-                <div th:if="${param.success}">
-                    <div class="alert alert-info">
-                        Inscription réussie !
+    <div class="container">
+        <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
+            <div class="col-md-3 mb-2 mb-md-0">
+                <a href="/" class="d-inline-flex link-body-emphasis text-decoration-none">
+                    <h1>Home Trade</h1>
+                </a>
+            </div>
+
+            <div class="col-md-3 text-end">
+                <div sec:authorize="isAuthenticated()">
+                    <a href="/profile" class="btn btn-outline-primary me-2">Mon profil</a>
+                    <a href="#" th:href="@{/logout}" class="btn btn-primary">Se déconnecter</a>
+                </div>
+                <div sec:authorize="!isAuthenticated()">
+                    <a href="/login" class="btn btn-outline-primary me-2">Se connecter</a>
+                    <a href="/registration" class="btn btn-primary">S'inscrire</a>
+                </div>
+            </div>
+        </header>
+    </div>
+    <div class="container">
+        <div class="row mt-5 justify-content-center align-items-center">
+            <div class="col-lg-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h1>Inscription</h1>
+                    </div>
+                    <div class="card-body">
+                        <div th:if="${param.success}">
+                            <div class="alert alert-info">
+                                Inscription réussie !
+                            </div>
+                        </div>
+                        <form method="post" role="form" th:action="@{/registration}" th:object="${userDto}">
+                            <div class="form-group mb-3">
+                                <label class="form-label" for="firstname">Nom</label>
+                                <input class="form-control" id="firstname" name="firstname" type="text" th:value="${userDto.firstname}">
+                                <p class="text-danger" th:errors="*{firstname}"
+                                   th:if="${#fields.hasErrors('firstname')}">
+                                </p>
+                            </div>
+                            <div class="form-group mb-3">
+                                <label class="form-label" for="lastname">Prénom</label>
+                                <input class="form-control" id="lastname" name="lastname" type="text" th:value="${userDto.lastname}">
+                                <p class="text-danger" th:errors="*{lastname}"
+                                   th:if="${#fields.hasErrors('lastname')}">
+                                </p>
+                            </div>
+                            <div class="form-group mb-3">
+                                <label class="form-label" for="email">Adresse e-mail</label>
+                                <input class="form-control" id="email" name="email" type="email" th:value="${userDto.email}">
+                                <p class="text-danger" th:errors="*{email}"
+                                   th:if="${#fields.hasErrors('email')}">
+                                </p>
+                            </div>
+                            <div class="form-group mb-3">
+                                <label class="form-label" for="password">Mot de passe</label>
+                                <input class="form-control" id="password" name="password" type="password">
+                                <p class="text-danger" th:errors="*{password}"
+                                   th:if="${#fields.hasErrors('password')}">
+                                </p>
+                            </div>
+                            <div class="form-group mb-3">
+                                <button class="btn btn-primary mb-3" type="submit">Valider</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
-                <div class="mb-3">
-                    <label class="form-label" for="firstname">Nom</label>
-                    <input class="form-control" id="firstname" name="firstname" type="text">
-                    <p class="text-danger" th:errors="*{firstname}"
-                       th:if="${#fields.hasErrors('firstname')}">
-                    </p>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label" for="lastname">Prénom</label>
-                    <input class="form-control" id="lastname" name="lastname" type="text">
-                    <p class="text-danger" th:errors="*{lastname}"
-                       th:if="${#fields.hasErrors('lastname')}">
-                    </p>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label" for="email">Adresse e-mail</label>
-                    <input class="form-control" id="email" name="email" type="email">
-                    <p class="text-danger" th:errors="*{email}"
-                       th:if="${#fields.hasErrors('email')}">
-                    </p>
-                </div>
-                <div class="mb-3">
-                    <label class="col-sm-2 col-form-label" for="password">Mot de passe</label>
-                    <input class="form-control" id="password" name="password" type="password">
-                    <p class="text-danger" th:errors="*{password}"
-                       th:if="${#fields.hasErrors('password')}">
-                    </p>
-                </div>
-                <div class="mb-3">
-                    <button class="btn btn-primary mb-3" type="submit">S'inscrire</button>
-                    ou <a class="link-primary" th:href="@{/login}">Se connecter</a>
-                </div>
-            </form>
+            </div>
         </div>
     </div>
-</div>
+    <div class="container">
+        <footer class="py-3 my-4">
+            <p class="text-center text-muted">© 2023 Home Trade</p>
+        </footer>
+    </div>
 </body>
 </html>
