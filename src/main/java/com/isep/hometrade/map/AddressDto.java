@@ -12,19 +12,19 @@ import lombok.Setter;
 @AllArgsConstructor
 public class AddressDto {
 
-    @NotEmpty(message = "Le numéro saisi n'est pas valide !")
+    @NotEmpty(message = "Numéro non valide !")
     private String number;
 
-    @NotEmpty(message = "La rue saisie n'est pas valide !")
+    @NotEmpty(message = "Rue non valide !")
     private String street;
 
-    @NotEmpty(message = "La ville saisie n'est pas valide !")
+    @NotEmpty(message = "Ville non valide !")
     private String city;
 
-    @NotEmpty(message = "Le code postal saisi n'est pas valide !")
+    @NotEmpty(message = "Code postal non valide !")
     private String code;
 
-    @NotEmpty(message = "Le pays saisi n'est pas valide !")
+    @NotEmpty(message = "Pays non valide !")
     private String country;
 
 }

@@ -6,9 +6,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.util.List;
 
 @Getter
 @Setter
@@ -16,14 +13,12 @@ import java.util.List;
 @AllArgsConstructor
 public class HouseDto {
 
-    @NotEmpty(message = "L'intitulé saisi n'est pas valide !")
-    private String title;
+    @NotEmpty(message = "Nom non valide !")
+    private String name;
 
-    @NotEmpty(message = "La description saisie n'est pas valide !")
+    @NotEmpty(message = "Description non valide !")
     private String description;
 
     private AddressEntity addressEntity;
-
-    private List<MultipartFile> photoEntities;
 
 }

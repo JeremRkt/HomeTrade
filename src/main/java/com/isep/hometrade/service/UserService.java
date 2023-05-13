@@ -1,14 +1,11 @@
 package com.isep.hometrade.service;
 
-import com.isep.hometrade.business.HouseEntity;
 import com.isep.hometrade.business.UserEntity;
 import com.isep.hometrade.dao.UserRepository;
 import com.isep.hometrade.map.UserDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.Set;
 
 @Service
 public class UserService {
@@ -34,10 +31,6 @@ public class UserService {
 
     public UserEntity findUserByEmail(String email) {
         return userRepository.findByEmail(email);
-    }
-
-    public Set<HouseEntity> findHousesByEmail(String email) {
-        return findUserByEmail(email).getHouseEntities();
     }
 
 }

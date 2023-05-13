@@ -30,12 +30,12 @@
         <div class="card-body">
           <div class="row align-items-center">
             <div class="col-md-4">
-              <img src="https://via.placeholder.com/150" class="img-fluid rounded-circle mb-3" alt="Photo de profil">
+              <img src="http://localhost/images/user.png" class="img-fluid rounded-circle mb-3" alt="Photo de profil">
             </div>
             <div class="col-md-8">
-              <p><strong>Prénom :</strong> <span th:text="${user.firstname}"></span></p>
-              <p><strong>Nom :</strong> <span th:text="${user.lastname}"></span></p>
-              <p><strong>Adresse e-mail :</strong> <span th:text="${user.email}"></span></p>
+              <p><strong>Prénom :</strong> <span th:text="${userEntity.firstname}"></span></p>
+              <p><strong>Nom :</strong> <span th:text="${userEntity.lastname}"></span></p>
+              <p><strong>Adresse e-mail :</strong> <span th:text="${userEntity.email}"></span></p>
             </div>
           </div>
         </div>
@@ -44,17 +44,19 @@
     <div class="col-md-6">
       <div class="card mb-4">
         <div class="card-header d-flex justify-content-between align-items-center">
-          <h2 class="mb-0">Maison</h2>
+          <h2>Logements</h2>
           <a href="/add-house" class="btn btn-primary">Ajouter</a>
         </div>
         <div class="card-body">
-          <div class="row mb-3 d-flex">
-            <div class="col-md-12 mb-3" th:each="house : ${houses}">
+          <div class="row d-flex">
+            <div class="col-md-12 mb-3" th:each="houseEntity : ${houseEntities}">
               <div class="card">
-                <img src="https://via.placeholder.com/500x300" class="card-img-top" th:if="${not house.photoEntities.isEmpty()}" th:src="${house.photoEntities.iterator().next().link}" alt="Photo de la maison">
+                <img src="https://via.placeholder.com/500x300" class="card-img-top" th:if="${not houseEntity.photoEntities.isEmpty()}" th:src="${houseEntity.photoEntities.iterator().next().path}" alt="Photo de la maison">
                 <div class="card-body">
-                  <h5 class="card-title" th:text="${house.title}">Maison</h5>
-                  <p class="card-text" th:text="${house.description}">Description de la maison.</p>
+                  <h5 class="card-title" th:text="${houseEntity.name}">Nom</h5>
+                  <p class="card-text" th:text="${houseEntity.description}">Description</p>
+                  <a href="#" th:href="@{/edit-house/{id}(id=${houseEntity.idHouse})}" class="btn btn-primary">Modifier</a>
+                  <a href="#" th:href="@{/delete-house/{id}(id=${houseEntity.idHouse})}" class="btn btn-primary">Supprimer</a>
                 </div>
               </div>
             </div>

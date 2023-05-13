@@ -19,23 +19,26 @@ public class HouseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_house")
-    private Integer idHouse;
+    private Long idHouse;
 
-    @Column(name = "title", nullable = false)
-    private String title;
+    @Column(name = "name", nullable = false)
+    private String name;
 
     @Column(name = "description")
     private String description;
+
+    @Column(name = "uuid")
+    private String uuid;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_address", nullable = false)
     private AddressEntity addressEntity;
 
-    @OneToMany(mappedBy = "houseEntity", cascade = CascadeType.ALL)
-    private Set<PhotoEntity> photoEntities;
-
     @ManyToOne
     @JoinColumn(name = "id_user")
     private UserEntity userEntity;
+
+    @OneToMany(mappedBy = "houseEntity", cascade = CascadeType.ALL)
+    private Set<PhotoEntity> photoEntities;
 
 }

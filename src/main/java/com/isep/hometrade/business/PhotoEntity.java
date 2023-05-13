@@ -17,10 +17,13 @@ public class PhotoEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_photo")
-    private Integer idPhoto;
+    private Long idPhoto;
 
-    @Column(name = "link", nullable = false)
-    private String link;
+    @Column(name = "name", nullable = false)
+    private String name;
+
+    @Column(name = "path", nullable = false)
+    private String path;
 
     @ManyToOne
     @JoinColumn(name = "id_house")

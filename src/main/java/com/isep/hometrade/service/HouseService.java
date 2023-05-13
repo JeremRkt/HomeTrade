@@ -2,63 +2,64 @@ package com.isep.hometrade.service;
 
 import com.isep.hometrade.business.AddressEntity;
 import com.isep.hometrade.business.HouseEntity;
-import com.isep.hometrade.business.PhotoEntity;
 import com.isep.hometrade.business.UserEntity;
-import com.isep.hometrade.dao.AddressRepository;
 import com.isep.hometrade.dao.HouseRepository;
-import com.isep.hometrade.util.FileUpload;
 import com.isep.hometrade.map.HouseDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.HashSet;
-import java.util.Objects;
+import java.util.List;
 import java.util.Set;
 
 @Service
 public class HouseService {
+
     private final HouseRepository houseRepository;
-    private final AddressRepository addressRepository;
 
     @Autowired
-    public HouseService(HouseRepository houseRepository, AddressRepository addressRepository) {
+    public HouseService(HouseRepository houseRepository) {
         this.houseRepository = houseRepository;
-        this.addressRepository = addressRepository;
     }
 
-    public void saveHouse(HouseDto houseDto, UserEntity userEntity) throws IOException {
-        AddressEntity addressEntity = new AddressEntity();
-        addressEntity.setNumber(houseDto.getAddressEntity().getNumber());
-        addressEntity.setStreet(houseDto.getAddressEntity().getStreet());
-        addressEntity.setCity(houseDto.getAddressEntity().getCity());
-        addressEntity.setCode(houseDto.getAddressEntity().getCode());
-        addressEntity.setCountry(houseDto.getAddressEntity().getCountry());
+    public HouseEntity saveHouse(HouseDto houseDto, String uuid, AddressEntity addressEntity, UserEntity userEntity) {
         HouseEntity houseEntity = new HouseEntity();
+        houseEntity.setName(houseDto.getName());
+        houseEntity.setDescription(houseDto.getDescription());
+        houseEntity.setUuid(uuid);
+        houseEntity.setAddressEntity(addressEntity);
         houseEntity.setUserEntity(userEntity);
-        houseEntity.setTitle(houseDto.getTitle());
+        houseRepository.save(houseEntity);
+        return houseEntity;
+    }
+
+    public void updateHouse(HouseEntity houseEntity, HouseDto houseDto, AddressEntity addressEntity) {
+        houseEntity.setName(houseDto.getName());
         houseEntity.setDescription(houseDto.getDescription());
         houseEntity.setAddressEntity(addressEntity);
-        addressRepository.save(addressEntity);
-        houseRepository.save(houseEntity);
-        Set<PhotoEntity> photoEntities = new HashSet<>();
-        for (MultipartFile multipartFile : houseDto.getPhotoEntities()) {
-            !!!!!Vérifier dans le controller pas ici
-            if (multipartFile != null && !multipartFile.isEmpty()) {
-                String name = StringUtils.cleanPath(Objects.requireNonNull(multipartFile.getOriginalFilename()));
-                String genericPath = "images/house-" + houseEntity.getIdHouse();
-                FileUpload.saveFile("C:/wamp64/www/" + genericPath, name, multipartFile);
-                PhotoEntity photoEntity = new PhotoEntity();
-                photoEntity.setLink("http://localhost/" + genericPath + "/" + name);
-                photoEntity.setHouseEntity(houseEntity);
-                photoEntities.add(photoEntity);
-            }
-        }
-        houseEntity.setPhotoEntities(photoEntities);
         houseRepository.save(houseEntity);
     }
 
+    public Set<HouseEntity> findHousesByUser(UserEntity userEntity) {
+        return userEntity.getHouseEntities();
+    }
+
+    public HouseEntity findHouseById(Long id) {
+        return houseRepository.findById(id).orElse(null);
+    }
+
+    public AddressEntity deleteHouseById(Long id) {
+        AddressEntity addressEntity = findHouseById(id).getAddressEntity();
+        houseRepository.deleteById(id);
+        return addressEntity;
+    }
+
+    public Set<HouseEntity> find5LatestHouses() {
+        Pageable pageable = PageRequest.of(0, 5);
+        List<HouseEntity> houseEntities = houseRepository.findLatestHouses(pageable);
+        return new HashSet<>(houseEntities);
+    }
 
 }

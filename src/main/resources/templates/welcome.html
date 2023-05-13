@@ -27,7 +27,7 @@
     </header>
 </div>
 <div class="container">
-    <div class="row justify-content-center">
+    <div class="row justify-content-center mb-4">
         <form class="form-inline d-flex justify-content-center" action="recherche.php" method="GET">
             <div class="form-group mx-sm-3 mb-2">
                 <label for="search" class="sr-only">Lieu</label>
@@ -46,6 +46,38 @@
                 <button type="submit" class="btn btn-primary form-control">Rechercher</button>
             </div>
         </form>
+    </div>
+</div>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <div class="card-deck">
+                <div class="card-header mb-3">
+                    <h2>Dernières nouveautés</h2>
+                </div>
+                <div class="card-body">
+                    <div class="col-md-12 mb-3" th:each="houseEntity : ${houseEntities}">
+                        <div class="card">
+                            <div class="row no-gutters">
+                                <div class="col-md-4">
+                                    <img src="https://via.placeholder.com/500x300" class="card-img" th:if="${not houseEntity.photoEntities.isEmpty()}" th:src="${houseEntity.photoEntities.iterator().next().path}" alt="Photo de la maison">
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="card-body">
+                                        <h5 class="card-title" th:text="${houseEntity.name}">Nom</h5>
+                                        <p class="card-text" th:text="${houseEntity.description}">Description</p>
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <small class="text-muted" th:text="${houseEntity.addressEntity.city}">Pays</small>
+                                            <a href="#" class="btn btn-primary">Voir</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 </body>

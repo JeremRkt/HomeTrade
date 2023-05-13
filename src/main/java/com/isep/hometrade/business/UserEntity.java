@@ -19,7 +19,7 @@ public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_user", unique = true, nullable = false)
-    private int idUser;
+    private Long idUser;
 
     @Column(name = "firstname")
     private String firstname;
@@ -35,10 +35,6 @@ public class UserEntity {
 
     @Column(name = "type", nullable = false)
     private int type;
-
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_photo")
-    private PhotoEntity photoEntity;
 
     @OneToMany(mappedBy = "userEntity", cascade = CascadeType.ALL)
     private Set<HouseEntity> houseEntities;
