@@ -21,7 +21,7 @@
     </header>
   </div>
   <div class="container">
-    <div class="row mt-5">
+    <div class="row">
       <div class="col-md-6">
         <div class="card mb-4">
           <div class="card-header">
@@ -33,9 +33,9 @@
                 <img src="http://localhost/images/user.png" class="img-fluid rounded-circle mb-3" alt="Photo de profil">
               </div>
               <div class="col-md-8">
-                <p><strong>Prénom :</strong> <span th:text="${userEntity.firstname}"></span></p>
-                <p><strong>Nom :</strong> <span th:text="${userEntity.lastname}"></span></p>
-                <p><strong>Adresse e-mail :</strong> <span th:text="${userEntity.email}"></span></p>
+                <p><strong>Prénom : </strong><span th:text="${userEntity.firstname}"></span></p>
+                <p><strong>Nom : </strong><span th:text="${userEntity.lastname}"></span></p>
+                <p><strong>Adresse e-mail : </strong><span th:text="${userEntity.email}"></span></p>
               </div>
             </div>
           </div>
@@ -44,20 +44,18 @@
       <div class="col-md-6">
         <div class="card mb-4">
           <div class="card-header d-flex justify-content-between align-items-center">
-            <h2>Logements</h2>
+            <h2 class="m-0">Logements</h2>
             <a href="/add-housing" class="btn btn-primary">Ajouter</a>
           </div>
           <div class="card-body">
-            <div class="row d-flex">
-              <div class="col-md-12 mb-3" th:each="housingEntity : ${housingEntities}">
-                <div class="card">
-                  <img src="https://via.placeholder.com/500x300" class="card-img-top" th:if="${not housingEntity.photoEntities.isEmpty()}" th:src="${housingEntity.photoEntities.iterator().next().path}" alt="Photo de la maison">
-                  <div class="card-body">
-                    <h5 class="card-title" th:text="${housingEntity.name}">Nom</h5>
-                    <p class="card-text" th:text="${housingEntity.description}">Description</p>
-                    <a href="#" th:href="@{/edit-housing/{id}(id=${housingEntity.idHousing})}" class="btn btn-primary">Modifier</a>
-                    <a href="#" th:href="@{/delete-housing/{id}(id=${housingEntity.idHousing})}" class="btn btn-primary">Supprimer</a>
-                  </div>
+            <div class="card-deck">
+              <div class="card mb-3" th:each="housingEntity : ${housingEntities}">
+                <img class="card-img-top" th:if="${not housingEntity.photoEntities.isEmpty()}" th:src="${housingEntity.photoEntities.iterator().next().path}">
+                <div class="card-body">
+                  <h5 class="card-title" th:text="${housingEntity.name}">Nom</h5>
+                  <p class="card-text" th:text="${housingEntity.description}">Description</p>
+                  <a href="#" th:href="@{/edit-housing/{id}(id=${housingEntity.idHousing})}" class="btn btn-outline-primary me-2">Modifier</a>
+                  <a href="#" th:href="@{/delete-housing/{id}(id=${housingEntity.idHousing})}" class="btn btn-primary">Supprimer</a>
                 </div>
               </div>
             </div>

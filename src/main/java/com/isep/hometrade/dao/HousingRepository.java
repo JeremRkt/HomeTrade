@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface HousingRepository extends JpaRepository<HousingEntity, Long> {
 
-    @Query("select u from HousingEntity u order by u.idHousing desc")
+    @Query("select u from HousingEntity u order by u.createdDate desc")
     List<HousingEntity> findLastHousings(Pageable pageable);
 
 }

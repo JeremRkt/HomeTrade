@@ -10,6 +10,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -30,6 +31,9 @@ public class HousingService {
         housingEntity.setName(housingDto.getName());
         housingEntity.setDescription(housingDto.getDescription());
         housingEntity.setUuid(uuid);
+        Date date = new Date();
+        housingEntity.setCreatedDate(date);
+        housingEntity.setModifiedDate(date);
         housingEntity.setAddressEntity(addressEntity);
         housingEntity.setUserEntity(userEntity);
         housingRepository.save(housingEntity);
@@ -40,6 +44,7 @@ public class HousingService {
         housingEntity.setType(housingDto.getType());
         housingEntity.setName(housingDto.getName());
         housingEntity.setDescription(housingDto.getDescription());
+        housingEntity.setModifiedDate(new Date());
         housingEntity.setAddressEntity(addressEntity);
         housingRepository.save(housingEntity);
     }

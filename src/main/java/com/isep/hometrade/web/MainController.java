@@ -370,7 +370,7 @@ public class MainController {
         session.setAttribute("housingDto", housingDto);
         session.setAttribute("prefixFromLocal", prefixFromLocal);
         session.setAttribute("prefixFromServer", prefixFromServer);
-        session.setAttribute("photoDtoStoBeAdd", photoDtoSToBeAdd);
+        session.setAttribute("photoDtoSToBeAdd", photoDtoSToBeAdd);
         session.setAttribute("photoDtoS", photoDtoS);
         model.addAttribute("photoDtoS", photoDtoS);
         return "edit-housing-page-3";
@@ -402,7 +402,7 @@ public class MainController {
         tempPhotoDtoS.add(photoDto);
         photoDtoSToBeAdd = tempPhotoDtoSToBeAdd.toArray(new PhotoDto[0]);
         photoDtoS = tempPhotoDtoS.toArray(new PhotoDto[0]);
-        session.setAttribute("tempPhotoDtoSToBeAdd", photoDtoSToBeAdd);
+        session.setAttribute("photoDtoSToBeAdd", photoDtoSToBeAdd);
         session.setAttribute("photoDtoS", photoDtoS);
         model.addAttribute("photoDtoS", photoDtoS);
         return "edit-housing-page-3";
@@ -608,6 +608,35 @@ public class MainController {
         AddressEntity addressEntity = housingService.deleteHousingById(id);
         addressService.deleteAddressById(addressEntity.getIdAddress());
         return "redirect:/profile";
+    }
+
+    @GetMapping("/view-housing/{id}")
+    public String viewHousing(@PathVariable("id") Long id, Model model) {
+        HousingEntity housingEntity = housingService.findHousingById(id);
+        Set<PhotoEntity> photoEntities = photoService.findPhotosByHousing(housingEntity);
+        Set<ServiceEntity> serviceEntities = serviceService.findServicesByHousing(housingEntity);
+        Set<ConstraintEntity> constraintEntities = constraintService.findConstraintsByHousing(housingEntity);
+        model.addAttribute("housingEntity", housingEntity);
+        model.addAttribute("photoEntities", photoEntities);
+        model.addAttribute("serviceEntities", serviceEntities);
+        model.addAttribute("constraintEntities", constraintEntities);
+        return "view-housing";
+    }
+
+    @GetMapping("/book-housing/{id}")
+    public String bookHousing(@PathVariable("id") Long id, Model model) {
+        BookingDto bookingDto = new BookingDto();
+        model.addAttribute("bookingDto", bookingDto);
+        return "book-housing";
+    }
+
+    @PostMapping("/book-housing")
+    public String processBooking(@Valid @ModelAttribute("bookingDto") BookingDto bookingDto, BindingResult result, Model model) {
+        if (result.hasErrors()) {
+            model.addAttribute("bookingDto", bookingDto);
+            return "book-housing";
+        }
+        return "redirect:/book-housing?success";
     }
 
 }

@@ -5,7 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 
+import java.util.Date;
 import java.util.Set;
 
 @Getter
@@ -32,6 +34,12 @@ public class HousingEntity {
 
     @Column(name = "uuid")
     private String uuid;
+
+    @Column(name = "created_date")
+    private Date createdDate;
+
+    @Column(name = "modified_date")
+    private Date modifiedDate;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_address", nullable = false)

@@ -28,7 +28,7 @@
     </div>
     <div class="container">
         <div class="row justify-content-center mb-4">
-            <form class="form-inline d-flex justify-content-center" action="recherche.php" method="GET">
+            <form class="form-inline d-flex justify-content-center" method="get">
                 <div class="form-group mx-sm-3 mb-2">
                     <label for="search" class="sr-only">Lieu</label>
                     <input type="text" class="form-control" id="search" name="search">
@@ -51,30 +51,19 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-10">
+                <div class="mb-4">
+                    <h2>Dernières nouveautés</h2>
+                </div>
                 <div class="card-deck">
-                    <div class="card-header mb-3">
-                        <h2>Dernières nouveautés</h2>
-                    </div>
-                    <div class="card-body">
-                        <div class="col-md-12 mb-3" th:each="housingEntity : ${housingEntities}">
-                            <div class="card">
-                                <div class="row no-gutters">
-                                    <div class="col-md-6">
-                                        <img src="https://via.placeholder.com/500x300" class="card-img" th:if="${not housingEntity.photoEntities.isEmpty()}" th:src="${housingEntity.photoEntities.iterator().next().path}" alt="Photo de la maison">
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="card-body">
-                                            <h4 class="card-title" th:text="${housingEntity.name}">Nom</h4>
-                                            <p class="card-text" th:text="${housingEntity.description}">Description</p>
-                                            <br><br>
-                                            <div class="d-flex justify-content-between align-items-center">
-                                                <small class="text-muted" th:text="${housingEntity.addressEntity.city}">Pays</small>
-                                                <a href="#" class="btn btn-primary">Voir</a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                    <div class="card mb-4" th:each="housingEntity : ${housingEntities}">
+                        <img class="card-img-top" th:if="${not housingEntity.photoEntities.isEmpty()}" th:src="${housingEntity.photoEntities.iterator().next().path}">
+                        <div class="card-body">
+                            <h5 class="card-title" th:text="${housingEntity.name}">Nom</h5>
+                            <p class="card-text" th:text="${#strings.concat(housingEntity.addressEntity.city, ', ',housingEntity.addressEntity.country)}">Ville, Pays</p>
+                            <a href="#" th:href="@{/view-housing/{id}(id=${housingEntity.idHousing})}" class="btn btn-primary">Consulter</a>
+                        </div>
+                        <div class="card-footer">
+                            <small class="text-muted">Dernière modification : <span th:text="${#dates.format(housingEntity.modifiedDate, 'dd/MM/yyyy')}"></span></small>
                         </div>
                     </div>
                 </div>
