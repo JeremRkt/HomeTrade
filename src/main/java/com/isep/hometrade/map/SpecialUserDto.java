@@ -1,8 +1,7 @@
 package com.isep.hometrade.map;
 
-import com.isep.hometrade.business.AddressEntity;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,13 +11,17 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class HousingDto {
+public class SpecialUserDto {
+
+    @NotEmpty(message = "Le prénom renseigné n''est pas valide !")
+    private String firstname;
 
     @NotEmpty(message = "Le nom renseigné n''est pas valide !")
-    private String name;
+    private String lastname;
 
-    @NotEmpty(message = "La description renseignée n''est pas valide !")
-    private String description;
+    @NotEmpty(message = "L''adresse e-mail renseignée n''est pas valide !")
+    @Email
+    private String email;
 
     @NotEmpty(message = "Le type renseigné n''est pas valide !")
     private String type;

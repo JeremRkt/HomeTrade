@@ -32,8 +32,8 @@ public class HousingService {
         housingEntity.setDescription(housingDto.getDescription());
         housingEntity.setUuid(uuid);
         Date date = new Date();
-        housingEntity.setCreatedDate(date);
-        housingEntity.setModifiedDate(date);
+        housingEntity.setCreation(date);
+        housingEntity.setModification(date);
         housingEntity.setAddressEntity(addressEntity);
         housingEntity.setUserEntity(userEntity);
         housingRepository.save(housingEntity);
@@ -44,7 +44,7 @@ public class HousingService {
         housingEntity.setType(housingDto.getType());
         housingEntity.setName(housingDto.getName());
         housingEntity.setDescription(housingDto.getDescription());
-        housingEntity.setModifiedDate(new Date());
+        housingEntity.setModification(new Date());
         housingEntity.setAddressEntity(addressEntity);
         housingRepository.save(housingEntity);
     }
@@ -58,8 +58,9 @@ public class HousingService {
     }
 
     public AddressEntity deleteHousingById(Long id) {
-        AddressEntity addressEntity = findHousingById(id).getAddressEntity();
-        housingRepository.deleteById(id);
+        HousingEntity housingEntity = findHousingById(id);
+        AddressEntity addressEntity = housingEntity.getAddressEntity();
+        housingRepository.delete(housingEntity);
         return addressEntity;
     }
 

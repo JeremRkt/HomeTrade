@@ -1,0 +1,34 @@
+<div th:fragment="headerFragment" xmlns:sec="http://www.w3.org/1999/xhtml">
+  <div sec:authorize="isAuthenticated()">
+    <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
+      <div class="col-md-3 mb-2 mb-md-0">
+        <a href="/" class="d-inline-flex link-body-emphasis text-decoration-none">
+          <h1>Home Trade</h1>
+        </a>
+      </div>
+      <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
+        <li><a href="/booking" class="nav-link px-2">Mes réservations</a></li>
+        <li><a href="/message" class="nav-link px-2">Mes messages</a></li>
+        <li><a href="/profile" class="nav-link px-2">Mon profil</a></li>
+      </ul>
+      <div class="col-md-3 text-end">
+        <a href="#" th:href="@{/logout}" class="btn btn-primary">Se déconnecter</a>
+      </div>
+    </header>
+  </div>
+  <div sec:authorize="!isAuthenticated()">
+    <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
+      <div class="col-md-3 mb-2 mb-md-0">
+        <a href="/" class="d-inline-flex link-body-emphasis text-decoration-none">
+          <h1>Home Trade</h1>
+        </a>
+      </div>
+      <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
+      </ul>
+      <div class="col-md-3 text-end">
+        <a href="/login" class="btn btn-outline-primary">Se connecter</a>
+        <a href="/registration" class="btn btn-primary">S'inscrire</a>
+      </div>
+    </header>
+  </div>
+</div>

@@ -18,20 +18,20 @@ public class AddressService {
 
     public AddressEntity saveAddress(AddressDto addressDto) {
         AddressEntity addressEntity = new AddressEntity();
-        addressEntity.setNumber(addressDto.getNumber());
+        addressEntity.setNumber(Integer.parseInt(addressDto.getNumber()));
         addressEntity.setStreet(addressDto.getStreet());
         addressEntity.setCity(addressDto.getCity());
-        addressEntity.setCode(addressDto.getCode());
+        addressEntity.setCode(Integer.parseInt(addressDto.getCode()));
         addressEntity.setCountry(addressDto.getCountry());
         addressRepository.save(addressEntity);
         return addressEntity;
     }
 
     public void updateAddress(AddressEntity addressEntity, AddressDto addressDto) {
-        addressEntity.setNumber(addressDto.getNumber());
+        addressEntity.setNumber(Integer.parseInt(addressDto.getNumber()));
         addressEntity.setStreet(addressDto.getStreet());
         addressEntity.setCity(addressDto.getCity());
-        addressEntity.setCode(addressDto.getCode());
+        addressEntity.setCode(Integer.parseInt(addressDto.getCode()));
         addressEntity.setCountry(addressDto.getCountry());
         addressRepository.save(addressEntity);
     }

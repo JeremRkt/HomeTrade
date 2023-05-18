@@ -35,11 +35,11 @@ public class HousingEntity {
     @Column(name = "uuid")
     private String uuid;
 
-    @Column(name = "created_date")
-    private Date createdDate;
+    @Column(name = "creation")
+    private Date creation;
 
-    @Column(name = "modified_date")
-    private Date modifiedDate;
+    @Column(name = "modification")
+    private Date modification;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_address", nullable = false)

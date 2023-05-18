@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Controller
@@ -26,17 +28,19 @@ public class MainController {
     private final PhotoService photoService;
     private final ServiceService serviceService;
     private final ConstraintService constraintService;
-
-
+    private final BookingService bookingService;
+    private final MessageService messageService;
 
     @Autowired
-    public MainController(UserService userService, AddressService addressService, HousingService housingService, PhotoService photoService, ServiceService serviceService, ConstraintService constraintService) {
+    public MainController(UserService userService, AddressService addressService, HousingService housingService, PhotoService photoService, ServiceService serviceService, ConstraintService constraintService, BookingService bookingService, MessageService messageService) {
         this.userService = userService;
         this.addressService = addressService;
         this.housingService = housingService;
         this.photoService = photoService;
         this.serviceService = serviceService;
         this.constraintService = constraintService;
+        this.bookingService = bookingService;
+        this.messageService = messageService;
     }
 
     @GetMapping("/")
@@ -76,9 +80,45 @@ public class MainController {
     public String profile(Model model, Authentication authentication) {
         UserEntity userEntity = userService.findUserByEmail(authentication.getName());
         Set<HousingEntity> housingEntities = housingService.findHousingsByUser(userEntity);
+        Set<UserEntity> userEntities = userService.findUsersByUser(userEntity);
         model.addAttribute("userEntity", userEntity);
         model.addAttribute("housingEntities", housingEntities);
+        model.addAttribute("userEntities", userEntities);
         return "profile";
+    }
+
+    @GetMapping("/booking")
+    public String booking(Model model, Authentication authentication) {
+        UserEntity userEntity = userService.findUserByEmail(authentication.getName());
+        Set<BookingEntity> superPendingBookingEntities = bookingService.findPendingBookingsBySuper(userEntity);
+        Set<BookingEntity> superAcceptedBookingEntities = bookingService.findAcceptedBookingsBySuper(userEntity);
+        Set<BookingEntity> superDeclinedBookingEntities = bookingService.findDeclinedBookingsBySuper(userEntity);
+        Set<BookingEntity> userPendingBookingEntities = bookingService.findPendingBookingsByUser(userEntity);
+        Set<BookingEntity> userAcceptedBookingEntities = bookingService.findAcceptedBookingsByUser(userEntity);
+        Set<BookingEntity> userDeclinedBookingEntities = bookingService.findDeclinedBookingsByUser(userEntity);
+        model.addAttribute("userEntity", userEntity);
+        model.addAttribute("superPendingBookingEntities", superPendingBookingEntities);
+        model.addAttribute("superAcceptedBookingEntities", superAcceptedBookingEntities);
+        model.addAttribute("superDeclinedBookingEntities", superDeclinedBookingEntities);
+        model.addAttribute("userPendingBookingEntities", userPendingBookingEntities);
+        model.addAttribute("userAcceptedBookingEntities", userAcceptedBookingEntities);
+        model.addAttribute("userDeclinedBookingEntities", userDeclinedBookingEntities);
+        return "booking";
+    }
+
+    @GetMapping("/message")
+    public String message(Model model, Authentication authentication) {
+        UserEntity userEntity = userService.findUserByEmail(authentication.getName());
+        Set<MessageEntity> superWithoutAnswerMessageEntities = messageService.findWithoutAnswerMessagesBySuper(userEntity);
+        Set<MessageEntity> superWithAnswerMessageEntities = messageService.findWithAnswerMessagesBySuper(userEntity);
+        Set<MessageEntity> userWithoutAnswerMessageEntities = messageService.findWithoutAnswerMessagesByUser(userEntity);
+        Set<MessageEntity> userWithAnswerMessageEntities = messageService.findWithAnswerMessagesByUser(userEntity);
+        model.addAttribute("userEntity", userEntity);
+        model.addAttribute("superWithoutAnswerMessageEntities", superWithoutAnswerMessageEntities);
+        model.addAttribute("superWithAnswerMessageEntities", superWithAnswerMessageEntities);
+        model.addAttribute("userWithoutAnswerMessageEntities", userWithoutAnswerMessageEntities);
+        model.addAttribute("userWithAnswerMessageEntities", userWithAnswerMessageEntities);
+        return "message";
     }
 
     @GetMapping("/add-housing")
@@ -317,10 +357,10 @@ public class MainController {
         HousingEntity housingEntity = housingService.findHousingById(id);
         AddressEntity addressEntity = housingEntity.getAddressEntity();
         AddressDto addressDto = new AddressDto();
-        addressDto.setNumber(addressEntity.getNumber());
+        addressDto.setNumber(String.valueOf(addressEntity.getNumber()));
         addressDto.setStreet(addressEntity.getStreet());
         addressDto.setCity(addressEntity.getCity());
-        addressDto.setCode(addressEntity.getCode());
+        addressDto.setCode(String.valueOf(addressEntity.getCode()));
         addressDto.setCountry(addressEntity.getCountry());
         session.setAttribute("housingEntity", housingEntity);
         session.setAttribute("addressEntity", addressEntity);
@@ -624,19 +664,120 @@ public class MainController {
     }
 
     @GetMapping("/book-housing/{id}")
-    public String bookHousing(@PathVariable("id") Long id, Model model) {
+    public String bookHousing(@PathVariable("id") Long id, Model model, HttpSession session) {
+        HousingEntity housingEntity = housingService.findHousingById(id);
         BookingDto bookingDto = new BookingDto();
+        session.setAttribute("housingEntity", housingEntity);
         model.addAttribute("bookingDto", bookingDto);
         return "book-housing";
     }
 
     @PostMapping("/book-housing")
-    public String processBooking(@Valid @ModelAttribute("bookingDto") BookingDto bookingDto, BindingResult result, Model model) {
+    public String processBookHousing(@Valid @ModelAttribute("bookingDto") BookingDto bookingDto, BindingResult result, Model model, HttpSession session, Authentication authentication) {
         if (result.hasErrors()) {
             model.addAttribute("bookingDto", bookingDto);
             return "book-housing";
         }
-        return "redirect:/book-housing?success";
+        try {
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            Date start = simpleDateFormat.parse(bookingDto.getStart());
+            Date end = simpleDateFormat.parse(bookingDto.getEnd());
+            UserEntity userEntity = userService.findUserByEmail(authentication.getName());
+            HousingEntity housingEntity = (HousingEntity) session.getAttribute("housingEntity");
+            bookingService.saveBooking(bookingDto, start, end, userEntity, housingEntity);
+            return "redirect:/booking";
+        } catch (ParseException | NumberFormatException e) {
+            model.addAttribute("bookingDto", bookingDto);
+            return "book-housing";
+        }
+    }
+
+    @GetMapping("/send-message/{id}")
+    public String askQuestion(@PathVariable("id") Long id, Model model, HttpSession session) {
+        HousingEntity housingEntity = housingService.findHousingById(id);
+        MessageDto messageDto = new MessageDto();
+        session.setAttribute("housingEntity", housingEntity);
+        model.addAttribute("messageDto", messageDto);
+        return "send-message";
+    }
+
+    @PostMapping("/send-message")
+    public String processSendMessage(@Valid @ModelAttribute("messageDto") MessageDto messageDto, BindingResult result, Model model, HttpSession session, Authentication authentication) {
+        if (result.hasErrors()) {
+            model.addAttribute("messageDto", messageDto);
+            return "send-message";
+        }
+        UserEntity userEntity = userService.findUserByEmail(authentication.getName());
+        HousingEntity housingEntity = (HousingEntity) session.getAttribute("housingEntity");
+        messageService.saveMessage(messageDto, userEntity, housingEntity);
+        return "redirect:/message";
+    }
+
+    @GetMapping("/decline-booking/{id}")
+    public String declineBooking(@PathVariable("id") Long id) {
+        BookingEntity bookingEntity = bookingService.findBookingById(id);
+        bookingService.declineBooking(bookingEntity);
+        return "redirect:/booking";
+    }
+
+    @GetMapping("/accept-booking/{id}")
+    public String acceptBooking(@PathVariable("id") Long id) {
+        BookingEntity bookingEntity = bookingService.findBookingById(id);
+        bookingService.acceptBooking(bookingEntity);
+        return "redirect:/booking";
+    }
+
+
+    @GetMapping("/send-answer/{id}")
+    public String sendAnswer(@PathVariable("id") Long id, Model model, HttpSession session) {
+        MessageEntity messageEntity = messageService.findMessageById(id);
+        MessageDto messageDto = new MessageDto();
+        session.setAttribute("messageEntity", messageEntity);
+        model.addAttribute("messageDto", messageDto);
+        return "send-answer";
+    }
+
+    @PostMapping("/send-answer")
+    public String processSendAnswer(@Valid @ModelAttribute("messageDto") MessageDto messageDto, BindingResult result, Model model, HttpSession session, Authentication authentication) {
+        if (result.hasErrors()) {
+            model.addAttribute("messageDto", messageDto);
+            return "send-answer";
+        }
+        UserEntity userEntity = userService.findUserByEmail(authentication.getName());
+        MessageEntity messageEntity = (MessageEntity) session.getAttribute("messageEntity");
+        messageService.saveAnswer(messageDto, userEntity, messageEntity);
+        return "redirect:/message";
+    }
+
+    @GetMapping("/edit-user/{id}")
+    public String editUser(@PathVariable("id") Long id, Model model, HttpSession session) {
+        UserEntity userEntity = userService.findUserById(id);
+        SpecialUserDto specialUserDto = new SpecialUserDto();
+        specialUserDto.setLastname(userEntity.getLastname());
+        specialUserDto.setFirstname(userEntity.getFirstname());
+        specialUserDto.setEmail(userEntity.getEmail());
+        specialUserDto.setType(userEntity.getType());
+        session.setAttribute("userEntity", userEntity);
+        model.addAttribute("specialUserDto", specialUserDto);
+        return "edit-user";
+    }
+
+    @PostMapping("/edit-user")
+    public String processEditUser(@Valid @ModelAttribute("specialUserDto") SpecialUserDto specialUserDto, BindingResult result, Model model, HttpSession session) {
+        if (result.hasErrors()) {
+            model.addAttribute("specialUserDto", specialUserDto);
+            return "edit-user";
+        }
+        UserEntity userEntity = (UserEntity) session.getAttribute("userEntity");
+        userService.updateUser(userEntity, specialUserDto);
+        return "redirect:/profile";
+    }
+
+    @GetMapping("/delete-user/{id}")
+    public String deleteUser(@PathVariable("id") Long id) {
+        UserEntity userEntity = userService.deleteUserById(id);
+        bookingService.deleteBookingsByUser(userEntity);
+        return "redirect:/profile";
     }
 
 }

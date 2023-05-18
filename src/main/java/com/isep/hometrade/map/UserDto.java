@@ -13,17 +13,17 @@ import lombok.Setter;
 @AllArgsConstructor
 public class UserDto {
 
-    @NotEmpty(message = "Le prénom saisi n'est pas valide !")
+    @NotEmpty(message = "Le prénom renseigné n''est pas valide !")
     private String firstname;
 
-    @NotEmpty(message = "Le nom saisi n'est pas valide !")
+    @NotEmpty(message = "Le nom renseigné n''est pas valide !")
     private String lastname;
 
-    @NotEmpty(message = "L'adresse e-mail saisie n'est pas valide !")
+    @NotEmpty(message = "L''adresse e-mail renseignée n''est pas valide !")
     @Email
     private String email;
 
-    @NotEmpty(message = "Le mot de passe saisi n'est pas valide")
+    @NotEmpty(message = "Le mot de passe renseigné n''est pas valide !")
     private String password;
 
 }

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Utilisateur</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+</head>
+<body>
+  <div class="container" th:include="fragments/header :: headerFragment"></div>
+  <div class="container">
+    <div class="row mt-5 justify-content-center align-items-center">
+      <div class="col-lg-8">
+        <div class="card">
+          <div class="card-header">
+            <h1 class="card-title">Utilisateur</h1>
+          </div>
+          <div class="card-body">
+            <form method="post" role="form" th:action="@{/edit-user}" th:object="${specialUserDto}">
+              <div class="form-group mb-3">
+                <label class="form-label" for="firstname">Nom</label>
+                <input class="form-control" id="firstname" name="firstname" type="text" th:value="${specialUserDto.firstname}">
+                <p class="text-danger" th:errors="*{firstname}"
+                   th:if="${#fields.hasErrors('firstname')}">
+                </p>
+              </div>
+              <div class="form-group mb-3">
+                <label class="form-label" for="lastname">Prénom</label>
+                <input class="form-control" id="lastname" name="lastname" type="text" th:value="${specialUserDto.lastname}">
+                <p class="text-danger" th:errors="*{lastname}"
+                   th:if="${#fields.hasErrors('lastname')}">
+                </p>
+              </div>
+              <div class="form-group mb-3">
+                <label class="form-label" for="email">Adresse e-mail</label>
+                <input class="form-control" id="email" name="email" type="email" th:value="${specialUserDto.email}">
+                <p class="text-danger" th:errors="*{email}"
+                   th:if="${#fields.hasErrors('email')}">
+                </p>
+              </div>
+              <div class="form-group mb-3">
+                <label class="form-label" for="type">Privilèges</label>
+                <select class="form-select" id="type" name="type">
+                  <option value="">Sélectionner un privilège</option>
+                  <option value="User" th:selected="${specialUserDto.type == 'User'}">Utilisateur</option>
+                  <option value="Super" th:selected="${specialUserDto.type == 'Super'}">Annonceur</option>
+                  <option value="Admin" th:selected="${specialUserDto.type == 'Admin'}">Administrateur</option>
+                </select>
+                <p class="text-danger" th:errors="*{type}" th:if="${#fields.hasErrors('type')}"></p>
+              </div>
+              <div class="form-group mb-3">
+                <button class="btn btn-success" type="submit">Valider</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="container" th:include="fragments/footer :: footerFragment"></div>
+</body>
+</html>
