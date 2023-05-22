@@ -28,7 +28,7 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public void saveUser(UserDto userDto) {
+    public UserEntity saveUser(UserDto userDto) {
         UserEntity userEntity = new UserEntity();
         userEntity.setFirstname(userDto.getFirstname());
         userEntity.setLastname(userDto.getLastname());
@@ -36,6 +36,7 @@ public class UserService {
         userEntity.setPassword(passwordEncoder.encode(userDto.getPassword()));
         userEntity.setType("User");
         userRepository.save(userEntity);
+        return userEntity;
     }
 
     public void updateUser(UserEntity userEntity, SpecialUserDto specialUserDto) {

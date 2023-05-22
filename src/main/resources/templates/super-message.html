@@ -7,7 +7,7 @@
 </head>
 <body>
   <div class="container" th:include="fragments/header :: headerFragment"></div>
-  <div class="container" th:if="${userEntity.type == 'Super'}">
+  <div class="container">
     <div class="row">
       <div class="col-md-6">
         <div class="card mb-4">
@@ -49,55 +49,6 @@
                 </div>
               </div>
               <div th:unless="${not #lists.isEmpty(superWithAnswerMessageEntities)}">
-                <p>Aucun message avec réponse.</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="container" th:if="${userEntity.type == 'User'}">
-    <div class="row">
-      <div class="col-md-6">
-        <div class="card mb-4">
-          <div class="card-header d-flex justify-content-between align-items-center">
-            <h2 class="m-0">Sans réponse</h2>
-          </div>
-          <div class="card-body">
-            <div class="card-deck">
-              <div th:if="${not #lists.isEmpty(userWithoutAnswerMessageEntities)}">
-                <div class="card mb-3" th:each="userWithoutAnswerMessageEntity : ${userWithoutAnswerMessageEntities}">
-                  <img class="card-img-top" th:if="${not userWithoutAnswerMessageEntity.housingEntity.photoEntities.isEmpty()}" th:src="${userWithoutAnswerMessageEntity.housingEntity.photoEntities.iterator().next().path}">
-                  <div class="card-body">
-                    <p class="card-text"><strong>Question : </strong><span th:text="${userWithoutAnswerMessageEntity.content}"></span></p>
-                  </div>
-                </div>
-              </div>
-              <div th:unless="${not #lists.isEmpty(userWithoutAnswerMessageEntities)}">
-                <p>Aucun message sans réponse.</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-6">
-        <div class="card mb-4">
-          <div class="card-header d-flex justify-content-between align-items-center">
-            <h2 class="m-0">Avec réponse</h2>
-          </div>
-          <div class="card-body">
-            <div class="card-deck">
-              <div th:if="${not #lists.isEmpty(userWithAnswerMessageEntities)}">
-                <div class="card mb-3" th:each="userWithAnswerMessageEntity : ${userWithAnswerMessageEntities}">
-                  <img class="card-img-top" th:if="${not userWithAnswerMessageEntity.housingEntity.photoEntities.isEmpty()}" th:src="${userWithAnswerMessageEntity.housingEntity.photoEntities.iterator().next().path}">
-                  <div class="card-body">
-                    <p class="card-text"><strong>Question : </strong><span th:text="${userWithAnswerMessageEntity.content}"></span></p>
-                    <p class="card-text"><strong>Réponse : </strong><span th:text="${userWithAnswerMessageEntity.messageEntity.content}"></span></p>
-                  </div>
-                </div>
-              </div>
-              <div th:unless="${not #lists.isEmpty(userWithAnswerMessageEntities)}">
                 <p>Aucun message avec réponse.</p>
               </div>
             </div>

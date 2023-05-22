@@ -30,9 +30,10 @@ public class MainController {
     private final ConstraintService constraintService;
     private final BookingService bookingService;
     private final MessageService messageService;
+    private final NoteService noteService;
 
     @Autowired
-    public MainController(UserService userService, AddressService addressService, HousingService housingService, PhotoService photoService, ServiceService serviceService, ConstraintService constraintService, BookingService bookingService, MessageService messageService) {
+    public MainController(UserService userService, AddressService addressService, HousingService housingService, PhotoService photoService, ServiceService serviceService, ConstraintService constraintService, BookingService bookingService, MessageService messageService, NoteService noteService) {
         this.userService = userService;
         this.addressService = addressService;
         this.housingService = housingService;
@@ -41,13 +42,14 @@ public class MainController {
         this.constraintService = constraintService;
         this.bookingService = bookingService;
         this.messageService = messageService;
+        this.noteService = noteService;
     }
 
     @GetMapping("/")
-    public String welcome(Model model) {
+    public String index(Model model) {
         Set<HousingEntity> housingEntities = housingService.find5LastHousings();
         model.addAttribute("housingEntities", housingEntities);
-        return "welcome";
+        return "index";
     }
 
     @RequestMapping("/login")
@@ -63,7 +65,7 @@ public class MainController {
     }
 
     @PostMapping("/registration")
-    public String processRegistration(@Valid @ModelAttribute("userDto") UserDto userDto, BindingResult result, Model model) {
+    public String processRegistration(@Valid @ModelAttribute("userDto") UserDto userDto, BindingResult result, Model model, HttpSession session) {
         UserEntity existingUser = userService.findUserByEmail(userDto.getEmail());
         if (existingUser != null) {
             result.rejectValue("email", null, "L'adresse e-mail saisie est déjà associée à un compte !");
@@ -72,53 +74,91 @@ public class MainController {
             model.addAttribute("userDto", userDto);
             return "registration";
         }
-        userService.saveUser(userDto);
+        UserEntity userEntity = userService.saveUser(userDto);
+        session.setAttribute("userEntity", userEntity);
         return "redirect:/registration?success";
     }
 
-    @GetMapping("/profile")
-    public String profile(Model model, Authentication authentication) {
-        UserEntity userEntity = userService.findUserByEmail(authentication.getName());
-        Set<HousingEntity> housingEntities = housingService.findHousingsByUser(userEntity);
-        Set<UserEntity> userEntities = userService.findUsersByUser(userEntity);
+    @GetMapping("/welcome")
+    public String welcome(Model model, HttpSession session) {
+        UserEntity userEntity = (UserEntity) session.getAttribute("userEntity");
+        Set<HousingEntity> housingEntities = housingService.find5LastHousings();
         model.addAttribute("userEntity", userEntity);
         model.addAttribute("housingEntities", housingEntities);
-        model.addAttribute("userEntities", userEntities);
-        return "profile";
+        return "welcome";
+    }
+
+    @GetMapping("/profile")
+    public String profile(Model model, HttpSession session) {
+        UserEntity userEntity = (UserEntity) session.getAttribute("userEntity");
+        model.addAttribute("userEntity", userEntity);
+        switch (userEntity.getType()) {
+            case "Admin" -> {
+                Set<UserEntity> userEntities = userService.findUsersByUser(userEntity);
+                model.addAttribute("userEntities", userEntities);
+                return "admin-profile";
+            }
+            case "Super" -> {
+                Set<HousingEntity> housingEntities = housingService.findHousingsByUser(userEntity);
+                model.addAttribute("housingEntities", housingEntities);
+                return "super-profile";
+            }
+            case "User" -> {
+                return "user-profile";
+            }
+        }
+        return null;
     }
 
     @GetMapping("/booking")
-    public String booking(Model model, Authentication authentication) {
-        UserEntity userEntity = userService.findUserByEmail(authentication.getName());
-        Set<BookingEntity> superPendingBookingEntities = bookingService.findPendingBookingsBySuper(userEntity);
-        Set<BookingEntity> superAcceptedBookingEntities = bookingService.findAcceptedBookingsBySuper(userEntity);
-        Set<BookingEntity> superDeclinedBookingEntities = bookingService.findDeclinedBookingsBySuper(userEntity);
-        Set<BookingEntity> userPendingBookingEntities = bookingService.findPendingBookingsByUser(userEntity);
-        Set<BookingEntity> userAcceptedBookingEntities = bookingService.findAcceptedBookingsByUser(userEntity);
-        Set<BookingEntity> userDeclinedBookingEntities = bookingService.findDeclinedBookingsByUser(userEntity);
+    public String booking(Model model, HttpSession session) {
+        UserEntity userEntity = (UserEntity) session.getAttribute("userEntity");
         model.addAttribute("userEntity", userEntity);
-        model.addAttribute("superPendingBookingEntities", superPendingBookingEntities);
-        model.addAttribute("superAcceptedBookingEntities", superAcceptedBookingEntities);
-        model.addAttribute("superDeclinedBookingEntities", superDeclinedBookingEntities);
-        model.addAttribute("userPendingBookingEntities", userPendingBookingEntities);
-        model.addAttribute("userAcceptedBookingEntities", userAcceptedBookingEntities);
-        model.addAttribute("userDeclinedBookingEntities", userDeclinedBookingEntities);
-        return "booking";
+        switch (userEntity.getType()) {
+            case "Super" -> {
+                Set<BookingEntity> superPendingBookingEntities = bookingService.findPendingBookingsBySuper(userEntity);
+                Set<BookingEntity> superAcceptedBookingEntities = bookingService.findAcceptedBookingsBySuper(userEntity);
+                Set<BookingEntity> superDeclinedBookingEntities = bookingService.findDeclinedBookingsBySuper(userEntity);
+                model.addAttribute("superPendingBookingEntities", superPendingBookingEntities);
+                model.addAttribute("superAcceptedBookingEntities", superAcceptedBookingEntities);
+                model.addAttribute("superDeclinedBookingEntities", superDeclinedBookingEntities);
+                return "super-booking";
+            }
+            case "User" -> {
+                Set<BookingEntity> userPendingBookingEntities = bookingService.findPendingBookingsByUser(userEntity);
+                Set<BookingEntity> userAcceptedBookingEntities = bookingService.findAcceptedBookingsByUser(userEntity);
+                Set<BookingEntity> userDeclinedBookingEntities = bookingService.findDeclinedBookingsByUser(userEntity);
+                model.addAttribute("userEntity", userEntity);
+                model.addAttribute("userPendingBookingEntities", userPendingBookingEntities);
+                model.addAttribute("userAcceptedBookingEntities", userAcceptedBookingEntities);
+                model.addAttribute("userDeclinedBookingEntities", userDeclinedBookingEntities);
+                return "user-booking";
+            }
+        }
+        return null;
     }
 
     @GetMapping("/message")
-    public String message(Model model, Authentication authentication) {
-        UserEntity userEntity = userService.findUserByEmail(authentication.getName());
-        Set<MessageEntity> superWithoutAnswerMessageEntities = messageService.findWithoutAnswerMessagesBySuper(userEntity);
-        Set<MessageEntity> superWithAnswerMessageEntities = messageService.findWithAnswerMessagesBySuper(userEntity);
-        Set<MessageEntity> userWithoutAnswerMessageEntities = messageService.findWithoutAnswerMessagesByUser(userEntity);
-        Set<MessageEntity> userWithAnswerMessageEntities = messageService.findWithAnswerMessagesByUser(userEntity);
+    public String message(Model model, HttpSession session) {
+        UserEntity userEntity = (UserEntity) session.getAttribute("userEntity");
         model.addAttribute("userEntity", userEntity);
-        model.addAttribute("superWithoutAnswerMessageEntities", superWithoutAnswerMessageEntities);
-        model.addAttribute("superWithAnswerMessageEntities", superWithAnswerMessageEntities);
-        model.addAttribute("userWithoutAnswerMessageEntities", userWithoutAnswerMessageEntities);
-        model.addAttribute("userWithAnswerMessageEntities", userWithAnswerMessageEntities);
-        return "message";
+        switch (userEntity.getType()) {
+            case "Super" -> {
+                Set<MessageEntity> superWithoutAnswerMessageEntities = messageService.findWithoutAnswerMessagesBySuper(userEntity);
+                Set<MessageEntity> superWithAnswerMessageEntities = messageService.findWithAnswerMessagesBySuper(userEntity);
+                model.addAttribute("superWithoutAnswerMessageEntities", superWithoutAnswerMessageEntities);
+                model.addAttribute("superWithAnswerMessageEntities", superWithAnswerMessageEntities);
+                return "super-message";
+            }
+            case "User" -> {
+                Set<MessageEntity> userWithoutAnswerMessageEntities = messageService.findWithoutAnswerMessagesByUser(userEntity);
+                Set<MessageEntity> userWithAnswerMessageEntities = messageService.findWithAnswerMessagesByUser(userEntity);
+                model.addAttribute("userWithoutAnswerMessageEntities", userWithoutAnswerMessageEntities);
+                model.addAttribute("userWithAnswerMessageEntities", userWithAnswerMessageEntities);
+                return "user-message";
+            }
+        }
+        return null;
     }
 
     @GetMapping("/add-housing")
@@ -651,15 +691,20 @@ public class MainController {
     }
 
     @GetMapping("/view-housing/{id}")
-    public String viewHousing(@PathVariable("id") Long id, Model model) {
+    public String viewHousing(@PathVariable("id") Long id, Model model, HttpSession session) {
+        UserEntity userEntity = (UserEntity) session.getAttribute("userEntity");
         HousingEntity housingEntity = housingService.findHousingById(id);
         Set<PhotoEntity> photoEntities = photoService.findPhotosByHousing(housingEntity);
         Set<ServiceEntity> serviceEntities = serviceService.findServicesByHousing(housingEntity);
         Set<ConstraintEntity> constraintEntities = constraintService.findConstraintsByHousing(housingEntity);
+        Set<NoteEntity> noteEntities = noteService.findAllNotesByHousing(housingEntity);
+        String starMean = noteService.calculateStarMean(noteEntities);
+        model.addAttribute("userEntity", userEntity);
         model.addAttribute("housingEntity", housingEntity);
         model.addAttribute("photoEntities", photoEntities);
         model.addAttribute("serviceEntities", serviceEntities);
         model.addAttribute("constraintEntities", constraintEntities);
+        model.addAttribute("starMean", starMean);
         return "view-housing";
     }
 
@@ -778,6 +823,38 @@ public class MainController {
         UserEntity userEntity = userService.deleteUserById(id);
         bookingService.deleteBookingsByUser(userEntity);
         return "redirect:/profile";
+    }
+
+    @GetMapping("/note-housing/{id}")
+    public String noteHousing(@PathVariable("id") Long id, Model model, HttpSession session, Authentication authentication) {
+        UserEntity userEntity = userService.findUserByEmail(authentication.getName());
+        HousingEntity housingEntity = housingService.findHousingById(id);
+        NoteEntity noteEntity = noteService.findNoteByUserAndHousing(userEntity, housingEntity);
+        NoteDto noteDto = new NoteDto();
+        if (noteEntity != null) {
+            noteDto.setNote(String.valueOf(noteEntity.getNote()));
+        }
+        session.setAttribute("noteEntity", noteEntity);
+        session.setAttribute("housingEntity", housingEntity);
+        model.addAttribute("noteDto", noteDto);
+        return "note-housing";
+    }
+
+    @PostMapping("/note-housing")
+    public String processNoteHousing(@Valid @ModelAttribute("noteDto") NoteDto noteDto, BindingResult result, Model model, HttpSession session, Authentication authentication) {
+        if (result.hasErrors()) {
+            model.addAttribute("noteDto", noteDto);
+            return "note-housing";
+        }
+        NoteEntity noteEntity = (NoteEntity) session.getAttribute("noteEntity");
+        HousingEntity housingEntity = (HousingEntity) session.getAttribute("housingEntity");
+        if (noteEntity != null) {
+            noteService.updateHousing(noteEntity, noteDto);
+        } else {
+            UserEntity userEntity = userService.findUserByEmail(authentication.getName());
+            noteService.saveNote(noteDto, userEntity, housingEntity);
+        }
+        return "redirect:/view-housing/" + housingEntity.getIdHousing();
     }
 
 }

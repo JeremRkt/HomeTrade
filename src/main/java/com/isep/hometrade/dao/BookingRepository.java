@@ -3,7 +3,6 @@ package com.isep.hometrade.dao;
 import com.isep.hometrade.business.BookingEntity;
 import com.isep.hometrade.business.HousingEntity;
 import com.isep.hometrade.business.UserEntity;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

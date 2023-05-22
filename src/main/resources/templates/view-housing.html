@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr" xmlns:sec="http://www.w3.org/1999/xhtml">
+<html lang="fr">
 <head>
   <meta charset="UTF-8">
   <title>Logement</title>
@@ -39,6 +39,7 @@
                       <p class="card-text">Description : <span th:text="${housingEntity.description}"></span></p>
                       <p class="card-text">Type : <span th:text="${housingEntity.type}"></span></p>
                       <p class="card-text">Localisation : <span th:text="${#strings.concat(housingEntity.addressEntity.city, ', ',housingEntity.addressEntity.country)}"></span></p>
+                      <p class="card-text">Note : <span th:text="${starMean}"></span></p>
                     </div>
                   </div>
                 </div>
@@ -46,9 +47,14 @@
                   <div class="card">
                     <div class="card-body">
                       <h5 class="card-title">Services</h5>
-                      <ul th:each="serviceEntity : ${serviceEntities}">
-                        <li class="card-text" th:text="${serviceEntity.name}"></li>
-                      </ul>
+                      <div th:if="${not #lists.isEmpty(serviceEntities)}">
+                        <ul th:each="serviceEntity : ${serviceEntities}">
+                          <li class="card-text" th:text="${serviceEntity.name}"></li>
+                        </ul>
+                      </div>
+                      <div th:unless="${not #lists.isEmpty(housingEntities)}">
+                        <p>Aucun service.</p>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -56,15 +62,21 @@
                   <div class="card">
                     <div class="card-body">
                       <h5 class="card-title">Contraintes</h5>
-                      <ul th:each="constraintEntity : ${constraintEntities}">
-                        <li class="card-text" th:text="${constraintEntity.name}"></li>
-                      </ul>
+                      <div th:if="${not #lists.isEmpty(constraintEntities)}">
+                        <ul th:each="constraintEntity : ${constraintEntities}">
+                          <li class="card-text" th:text="${constraintEntity.name}"></li>
+                        </ul>
+                      </div>
+                      <div th:unless="${not #lists.isEmpty(housingEntities)}">
+                        <p>Aucune contrainte.</p>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
               <div class="mt-4">
                 <a href="#" class="btn btn-outline-primary" th:href="@{/book-housing/{id}(id=${housingEntity.idHousing})}">Réserver</a>
+                <a href="#" class="btn btn-primary" th:href="@{/note-housing/{id}(id=${housingEntity.idHousing})}">Noter</a>
                 <a href="#" class="btn btn-primary" th:href="@{/send-message/{id}(id=${housingEntity.idHousing})}">Contacter</a>
               </div>
             </div>
