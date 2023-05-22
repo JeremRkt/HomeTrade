@@ -74,14 +74,13 @@ public class MainController {
             model.addAttribute("userDto", userDto);
             return "registration";
         }
-        UserEntity userEntity = userService.saveUser(userDto);
-        session.setAttribute("userEntity", userEntity);
+        userService.saveUser(userDto);
         return "redirect:/registration?success";
     }
 
     @GetMapping("/welcome")
-    public String welcome(Model model, HttpSession session) {
-        UserEntity userEntity = (UserEntity) session.getAttribute("userEntity");
+    public String welcome(Model model, Authentication authentication) {
+        UserEntity userEntity = userService.findUserByEmail(authentication.getName());
         Set<HousingEntity> housingEntities = housingService.find5LastHousings();
         model.addAttribute("userEntity", userEntity);
         model.addAttribute("housingEntities", housingEntities);
@@ -89,8 +88,8 @@ public class MainController {
     }
 
     @GetMapping("/profile")
-    public String profile(Model model, HttpSession session) {
-        UserEntity userEntity = (UserEntity) session.getAttribute("userEntity");
+    public String profile(Model model, Authentication authentication) {
+        UserEntity userEntity = userService.findUserByEmail(authentication.getName());
         model.addAttribute("userEntity", userEntity);
         switch (userEntity.getType()) {
             case "Admin" -> {
@@ -101,6 +100,7 @@ public class MainController {
             case "Super" -> {
                 Set<HousingEntity> housingEntities = housingService.findHousingsByUser(userEntity);
                 model.addAttribute("housingEntities", housingEntities);
+                System.out.println(housingEntities);
                 return "super-profile";
             }
             case "User" -> {
@@ -111,8 +111,8 @@ public class MainController {
     }
 
     @GetMapping("/booking")
-    public String booking(Model model, HttpSession session) {
-        UserEntity userEntity = (UserEntity) session.getAttribute("userEntity");
+    public String booking(Model model, Authentication authentication) {
+        UserEntity userEntity = userService.findUserByEmail(authentication.getName());
         model.addAttribute("userEntity", userEntity);
         switch (userEntity.getType()) {
             case "Super" -> {
@@ -139,8 +139,8 @@ public class MainController {
     }
 
     @GetMapping("/message")
-    public String message(Model model, HttpSession session) {
-        UserEntity userEntity = (UserEntity) session.getAttribute("userEntity");
+    public String message(Model model, Authentication authentication) {
+        UserEntity userEntity = userService.findUserByEmail(authentication.getName());
         model.addAttribute("userEntity", userEntity);
         switch (userEntity.getType()) {
             case "Super" -> {
@@ -691,8 +691,8 @@ public class MainController {
     }
 
     @GetMapping("/view-housing/{id}")
-    public String viewHousing(@PathVariable("id") Long id, Model model, HttpSession session) {
-        UserEntity userEntity = (UserEntity) session.getAttribute("userEntity");
+    public String viewHousing(@PathVariable("id") Long id, Model model, Authentication authentication) {
+        UserEntity userEntity = userService.findUserByEmail(authentication.getName());
         HousingEntity housingEntity = housingService.findHousingById(id);
         Set<PhotoEntity> photoEntities = photoService.findPhotosByHousing(housingEntity);
         Set<ServiceEntity> serviceEntities = serviceService.findServicesByHousing(housingEntity);
