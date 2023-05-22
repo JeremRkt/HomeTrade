@@ -70,4 +70,18 @@ public class HousingService {
         return new HashSet<>(housingEntities);
     }
 
+    public List<HousingEntity> find5HousingsByCity(String city) {
+        Pageable pageable = PageRequest.of(0, 5);
+        return housingRepository.findHousingsByCity(pageable, city);
+    }
+
+    public List<HousingEntity> find5HousingsByCountry(String country) {
+        Pageable pageable = PageRequest.of(0, 5);
+        return housingRepository.findHousingsByCountry(pageable, country);
+    }
+
+    public List<HousingEntity> find5HousingsByCityAndCountry(String city, String country) {
+        return housingRepository.findHousingsByCityAndCountry(PageRequest.of(0, 5), city, country);
+    }
+
 }

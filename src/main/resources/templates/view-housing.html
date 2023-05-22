@@ -8,7 +8,7 @@
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </head>
 <body>
-  <div class="container" th:include="fragments/header :: headerFragment"></div>
+  <div class="container" th:include="fragments/header-logged :: headerLoggedFragment"></div>
   <div class="container">
     <div class="row justify-content-center">
       <div class="col-md-12">
@@ -74,8 +74,8 @@
                   </div>
                 </div>
               </div>
-              <div class="mt-4">
-                <a href="#" class="btn btn-outline-primary" th:href="@{/book-housing/{id}(id=${housingEntity.idHousing})}" th:if="${userEntity.type == 'User' || (userEntity.type == 'Super' && userEntity != housingEntity.userEntity)}">Réserver</a>
+              <div class="mt-4" th:if="${userEntity.type == 'User' || (userEntity.type == 'Super' && userEntity != housingEntity.userEntity)}">
+                <a href="#" class="btn btn-outline-primary" th:href="@{/book-housing/{id}(id=${housingEntity.idHousing})}">Réserver</a>
                 <a href="#" class="btn btn-primary" th:href="@{/note-housing/{id}(id=${housingEntity.idHousing})}">Noter</a>
                 <a href="#" class="btn btn-primary" th:href="@{/send-message/{id}(id=${housingEntity.idHousing})}">Contacter</a>
               </div>

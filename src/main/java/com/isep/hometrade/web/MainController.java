@@ -46,10 +46,29 @@ public class MainController {
     }
 
     @GetMapping("/")
-    public String index(Model model) {
-        Set<HousingEntity> housingEntities = housingService.find5LastHousings();
-        model.addAttribute("housingEntities", housingEntities);
-        return "index";
+    public String index(Model model, HttpSession session) {
+        Set<HousingEntity> tempLastHousingEntities = housingService.find5LastHousings();
+        HousingEntity[] lastHousingEntities = tempLastHousingEntities.toArray(new HousingEntity[0]);
+        HousingEntity[] searchHousingEntities = new HousingEntity[0];
+        session.setAttribute("lastHousingEntities", lastHousingEntities);
+        session.setAttribute("searchHousingEntities", searchHousingEntities);
+        model.addAttribute("lastHousingEntities", lastHousingEntities);
+        model.addAttribute("searchHousingEntities", searchHousingEntities);
+        return "welcome";
+    }
+
+    @GetMapping("/welcome-logged")
+    public String welcomeLogged(Model model, HttpSession session, Authentication authentication) {
+        UserEntity userEntity = userService.findUserByEmail(authentication.getName());
+        Set<HousingEntity> tempLastHousingEntities = housingService.find5LastHousings();
+        HousingEntity[] lastHousingEntities = tempLastHousingEntities.toArray(new HousingEntity[0]);
+        HousingEntity[] searchHousingEntities = new HousingEntity[0];
+        session.setAttribute("lastHousingEntities", lastHousingEntities);
+        session.setAttribute("searchHousingEntities", searchHousingEntities);
+        model.addAttribute("userEntity", userEntity);
+        model.addAttribute("lastHousingEntities", lastHousingEntities);
+        model.addAttribute("searchHousingEntities", searchHousingEntities);
+        return "welcome-logged";
     }
 
     @RequestMapping("/login")
@@ -78,13 +97,44 @@ public class MainController {
         return "redirect:/registration?success";
     }
 
-    @GetMapping("/welcome")
-    public String welcome(Model model, Authentication authentication) {
-        UserEntity userEntity = userService.findUserByEmail(authentication.getName());
-        Set<HousingEntity> housingEntities = housingService.find5LastHousings();
-        model.addAttribute("userEntity", userEntity);
-        model.addAttribute("housingEntities", housingEntities);
+    @GetMapping("/search")
+    public String search(Model model, @RequestParam("city") String city, @RequestParam("country") String country, HttpSession session, Authentication authentication) {
+        List<HousingEntity> searchHousingEntities = new ArrayList<>();
+        if (!city.isEmpty() || !country.isEmpty()) {
+            if (!city.isEmpty() && !country.isEmpty()) {
+                searchHousingEntities = housingService.find5HousingsByCityAndCountry(city, country);
+            } else if (!city.isEmpty()) {
+                searchHousingEntities = housingService.find5HousingsByCity(city);
+            } else {
+                searchHousingEntities = housingService.find5HousingsByCountry(country);
+            }
+        }
+        HousingEntity[] tempLastHousingEntities = (HousingEntity[]) session.getAttribute("lastHousingEntities");
+        ArrayList<HousingEntity> lastHousingEntities = new ArrayList<>(Arrays.asList(tempLastHousingEntities));
+        model.addAttribute("lastHousingEntities", lastHousingEntities);
+        model.addAttribute("searchHousingEntities", searchHousingEntities);
         return "welcome";
+    }
+
+    @GetMapping("/search-logged")
+    public String searchLogged(Model model, @RequestParam("city") String city, @RequestParam("country") String country, HttpSession session, Authentication authentication) {
+        UserEntity userEntity = userService.findUserByEmail(authentication.getName());
+        List<HousingEntity> searchHousingEntities = new ArrayList<>();
+        if (!city.isEmpty() || !country.isEmpty()) {
+            if (!city.isEmpty() && !country.isEmpty()) {
+                searchHousingEntities = housingService.find5HousingsByCityAndCountry(city, country);
+            } else if (!city.isEmpty()) {
+                searchHousingEntities = housingService.find5HousingsByCity(city);
+            } else {
+                searchHousingEntities = housingService.find5HousingsByCountry(country);
+            }
+        }
+        HousingEntity[] tempLastHousingEntities = (HousingEntity[]) session.getAttribute("lastHousingEntities");
+        ArrayList<HousingEntity> lastHousingEntities = new ArrayList<>(Arrays.asList(tempLastHousingEntities));
+        model.addAttribute("userEntity", userEntity);
+        model.addAttribute("lastHousingEntities", lastHousingEntities);
+        model.addAttribute("searchHousingEntities", searchHousingEntities);
+        return "welcome-logged";
     }
 
     @GetMapping("/profile")
