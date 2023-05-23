@@ -160,55 +160,52 @@ public class MainController {
         return null;
     }
 
-    @GetMapping("/booking")
-    public String booking(Model model, Authentication authentication) {
+    @GetMapping("/super-booking")
+    public String superBooking(Model model, Authentication authentication) {
         UserEntity userEntity = userService.findUserByEmail(authentication.getName());
         model.addAttribute("userEntity", userEntity);
-        switch (userEntity.getType()) {
-            case "Super" -> {
-                Set<BookingEntity> superPendingBookingEntities = bookingService.findPendingBookingsBySuper(userEntity);
-                Set<BookingEntity> superAcceptedBookingEntities = bookingService.findAcceptedBookingsBySuper(userEntity);
-                Set<BookingEntity> superDeclinedBookingEntities = bookingService.findDeclinedBookingsBySuper(userEntity);
-                model.addAttribute("superPendingBookingEntities", superPendingBookingEntities);
-                model.addAttribute("superAcceptedBookingEntities", superAcceptedBookingEntities);
-                model.addAttribute("superDeclinedBookingEntities", superDeclinedBookingEntities);
-                return "super-booking";
-            }
-            case "User" -> {
-                Set<BookingEntity> userPendingBookingEntities = bookingService.findPendingBookingsByUser(userEntity);
-                Set<BookingEntity> userAcceptedBookingEntities = bookingService.findAcceptedBookingsByUser(userEntity);
-                Set<BookingEntity> userDeclinedBookingEntities = bookingService.findDeclinedBookingsByUser(userEntity);
-                model.addAttribute("userEntity", userEntity);
-                model.addAttribute("userPendingBookingEntities", userPendingBookingEntities);
-                model.addAttribute("userAcceptedBookingEntities", userAcceptedBookingEntities);
-                model.addAttribute("userDeclinedBookingEntities", userDeclinedBookingEntities);
-                return "user-booking";
-            }
-        }
-        return null;
+        Set<BookingEntity> superPendingBookingEntities = bookingService.findPendingBookingsBySuper(userEntity);
+        Set<BookingEntity> superAcceptedBookingEntities = bookingService.findAcceptedBookingsBySuper(userEntity);
+        Set<BookingEntity> superDeclinedBookingEntities = bookingService.findDeclinedBookingsBySuper(userEntity);
+        model.addAttribute("superPendingBookingEntities", superPendingBookingEntities);
+        model.addAttribute("superAcceptedBookingEntities", superAcceptedBookingEntities);
+        model.addAttribute("superDeclinedBookingEntities", superDeclinedBookingEntities);
+        return "super-booking";
     }
 
-    @GetMapping("/message")
-    public String message(Model model, Authentication authentication) {
+    @GetMapping("/user-booking")
+    public String userBooking(Model model, Authentication authentication) {
         UserEntity userEntity = userService.findUserByEmail(authentication.getName());
+        Set<BookingEntity> userPendingBookingEntities = bookingService.findPendingBookingsByUser(userEntity);
+        Set<BookingEntity> userAcceptedBookingEntities = bookingService.findAcceptedBookingsByUser(userEntity);
+        Set<BookingEntity> userDeclinedBookingEntities = bookingService.findDeclinedBookingsByUser(userEntity);
         model.addAttribute("userEntity", userEntity);
-        switch (userEntity.getType()) {
-            case "Super" -> {
-                Set<MessageEntity> superWithoutAnswerMessageEntities = messageService.findWithoutAnswerMessagesBySuper(userEntity);
-                Set<MessageEntity> superWithAnswerMessageEntities = messageService.findWithAnswerMessagesBySuper(userEntity);
-                model.addAttribute("superWithoutAnswerMessageEntities", superWithoutAnswerMessageEntities);
-                model.addAttribute("superWithAnswerMessageEntities", superWithAnswerMessageEntities);
-                return "super-message";
-            }
-            case "User" -> {
-                Set<MessageEntity> userWithoutAnswerMessageEntities = messageService.findWithoutAnswerMessagesByUser(userEntity);
-                Set<MessageEntity> userWithAnswerMessageEntities = messageService.findWithAnswerMessagesByUser(userEntity);
-                model.addAttribute("userWithoutAnswerMessageEntities", userWithoutAnswerMessageEntities);
-                model.addAttribute("userWithAnswerMessageEntities", userWithAnswerMessageEntities);
-                return "user-message";
-            }
-        }
-        return null;
+        model.addAttribute("userPendingBookingEntities", userPendingBookingEntities);
+        model.addAttribute("userAcceptedBookingEntities", userAcceptedBookingEntities);
+        model.addAttribute("userDeclinedBookingEntities", userDeclinedBookingEntities);
+        return "user-booking";
+    }
+
+    @GetMapping("/super-message")
+    public String superMessage(Model model, Authentication authentication) {
+        UserEntity userEntity = userService.findUserByEmail(authentication.getName());
+        Set<MessageEntity> superWithoutAnswerMessageEntities = messageService.findWithoutAnswerMessagesBySuper(userEntity);
+        Set<MessageEntity> superWithAnswerMessageEntities = messageService.findWithAnswerMessagesBySuper(userEntity);
+        model.addAttribute("userEntity", userEntity);
+        model.addAttribute("superWithoutAnswerMessageEntities", superWithoutAnswerMessageEntities);
+        model.addAttribute("superWithAnswerMessageEntities", superWithAnswerMessageEntities);
+        return "super-message";
+    }
+
+    @GetMapping("/user-message")
+    public String userMessage(Model model, Authentication authentication) {
+        UserEntity userEntity = userService.findUserByEmail(authentication.getName());
+        Set<MessageEntity> userWithoutAnswerMessageEntities = messageService.findWithoutAnswerMessagesByUser(userEntity);
+        Set<MessageEntity> userWithAnswerMessageEntities = messageService.findWithAnswerMessagesByUser(userEntity);
+        model.addAttribute("userEntity", userEntity);
+        model.addAttribute("userWithoutAnswerMessageEntities", userWithoutAnswerMessageEntities);
+        model.addAttribute("userWithAnswerMessageEntities", userWithAnswerMessageEntities);
+        return "user-message";
     }
 
     @GetMapping("/add-housing")
@@ -780,7 +777,7 @@ public class MainController {
             UserEntity userEntity = userService.findUserByEmail(authentication.getName());
             HousingEntity housingEntity = (HousingEntity) session.getAttribute("housingEntity");
             bookingService.saveBooking(bookingDto, start, end, userEntity, housingEntity);
-            return "redirect:/booking";
+            return "redirect:/user-booking";
         } catch (ParseException | NumberFormatException e) {
             model.addAttribute("bookingDto", bookingDto);
             return "book-housing";
@@ -805,21 +802,21 @@ public class MainController {
         UserEntity userEntity = userService.findUserByEmail(authentication.getName());
         HousingEntity housingEntity = (HousingEntity) session.getAttribute("housingEntity");
         messageService.saveMessage(messageDto, userEntity, housingEntity);
-        return "redirect:/message";
+        return "redirect:/user-message";
     }
 
     @GetMapping("/decline-booking/{id}")
     public String declineBooking(@PathVariable("id") Long id) {
         BookingEntity bookingEntity = bookingService.findBookingById(id);
         bookingService.declineBooking(bookingEntity);
-        return "redirect:/booking";
+        return "redirect:/super-booking";
     }
 
     @GetMapping("/accept-booking/{id}")
     public String acceptBooking(@PathVariable("id") Long id) {
         BookingEntity bookingEntity = bookingService.findBookingById(id);
         bookingService.acceptBooking(bookingEntity);
-        return "redirect:/booking";
+        return "redirect:/super-booking";
     }
 
 
@@ -841,7 +838,7 @@ public class MainController {
         UserEntity userEntity = userService.findUserByEmail(authentication.getName());
         MessageEntity messageEntity = (MessageEntity) session.getAttribute("messageEntity");
         messageService.saveAnswer(messageDto, userEntity, messageEntity);
-        return "redirect:/message";
+        return "redirect:/super-message";
     }
 
     @GetMapping("/edit-user/{id}")

@@ -6,10 +6,10 @@
       </a>
     </div>
     <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
-      <li><a href="/booking" class="nav-link px-2" th:if="${userEntity.type == 'Super'}">Mes confirmations</a></li>
-      <li><a href="/booking" class="nav-link px-2" th:if="${userEntity.type == 'Super' || userEntity.type == 'User'}">Mes demandes</a></li>
-      <li><a href="/message" class="nav-link px-2" th:if="${userEntity.type == 'Super'}">Mes réponses</a></li>
-      <li><a href="/message" class="nav-link px-2" th:if="${userEntity.type == 'Super' || userEntity.type == 'User'}">Mes questions</a></li>
+      <li><a href="/user-booking" class="nav-link px-2" th:if="${userEntity.type == 'Super' || userEntity.type == 'User'}">Mes demandes</a></li>
+      <li><a href="/super-booking" class="nav-link px-2" th:if="${userEntity.type == 'Super'}">Mes retours</a></li>
+      <li><a href="/user-message" class="nav-link px-2" th:if="${userEntity.type == 'Super' || userEntity.type == 'User'}">Mes questions</a></li>
+      <li><a href="/super-message" class="nav-link px-2" th:if="${userEntity.type == 'Super'}">Mes réponses</a></li>
       <li><a href="/profile" class="nav-link px-2">Mon profil</a></li>
     </ul>
     <div class="col-md-3 text-end">
