@@ -32,7 +32,7 @@ public class NoteService {
         noteRepository.save(noteEntity);
     }
 
-    public void updateHousing(NoteEntity noteEntity, NoteDto noteDto) {
+    public void updateNote(NoteEntity noteEntity, NoteDto noteDto) {
         noteEntity.setNote(Integer.parseInt(noteDto.getNote()));
         noteRepository.save(noteEntity);
     }

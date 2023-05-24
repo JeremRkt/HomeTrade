@@ -895,7 +895,7 @@ public class MainController {
         NoteEntity noteEntity = (NoteEntity) session.getAttribute("noteEntity");
         HousingEntity housingEntity = (HousingEntity) session.getAttribute("housingEntity");
         if (noteEntity != null) {
-            noteService.updateHousing(noteEntity, noteDto);
+            noteService.updateNote(noteEntity, noteDto);
         } else {
             UserEntity userEntity = userService.findUserByEmail(authentication.getName());
             noteService.saveNote(noteDto, userEntity, housingEntity);
