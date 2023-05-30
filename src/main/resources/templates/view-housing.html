@@ -52,7 +52,7 @@
                           <li class="card-text" th:text="${serviceEntity.name}"></li>
                         </ul>
                       </div>
-                      <div th:unless="${not #lists.isEmpty(housingEntities)}">
+                      <div th:unless="${not #lists.isEmpty(serviceEntities)}">
                         <p>Aucun service.</p>
                       </div>
                     </div>
@@ -67,7 +67,7 @@
                           <li class="card-text" th:text="${constraintEntity.name}"></li>
                         </ul>
                       </div>
-                      <div th:unless="${not #lists.isEmpty(housingEntities)}">
+                      <div th:unless="${not #lists.isEmpty(constraintEntities)}">
                         <p>Aucune contrainte.</p>
                       </div>
                     </div>
