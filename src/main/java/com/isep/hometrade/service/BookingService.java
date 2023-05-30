@@ -115,4 +115,13 @@ public class BookingService {
         bookingRepository.deleteAll(bookingEntities);
     }
 
+    public boolean findAcceptedBookingByHousingAndUser(HousingEntity housingEntity, UserEntity userEntity) {
+        BookingEntity bookingEntity = bookingRepository.findAcceptedByHousingAndUser(housingEntity, userEntity);
+        return bookingEntity != null;
+    }
+
+    public boolean findPendingBookingByHousingAndUser(HousingEntity housingEntity, UserEntity userEntity) {
+        BookingEntity bookingEntity = bookingRepository.findPendingByHousingAndUser(housingEntity, userEntity);
+        return bookingEntity != null;
+    }
 }

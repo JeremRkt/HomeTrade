@@ -740,17 +740,24 @@ public class MainController {
     public String viewHousing(@PathVariable("id") Long id, Model model, Authentication authentication) {
         UserEntity userEntity = userService.findUserByEmail(authentication.getName());
         HousingEntity housingEntity = housingService.findHousingById(id);
+        boolean hasAlreadyBook = bookingService.findAcceptedBookingByHousingAndUser(housingEntity, userEntity);
+        boolean hasNotAlreadyBook = bookingService.findPendingBookingByHousingAndUser(housingEntity, userEntity);
         Set<PhotoEntity> photoEntities = photoService.findPhotosByHousing(housingEntity);
         Set<ServiceEntity> serviceEntities = serviceService.findServicesByHousing(housingEntity);
         Set<ConstraintEntity> constraintEntities = constraintService.findConstraintsByHousing(housingEntity);
         Set<NoteEntity> noteEntities = noteService.findAllNotesByHousing(housingEntity);
         String starMean = noteService.calculateStarMean(noteEntities);
+        int bookingNumber = bookingService.findAcceptedBookingsByHousing(housingEntity).size();
         model.addAttribute("userEntity", userEntity);
         model.addAttribute("housingEntity", housingEntity);
+        model.addAttribute("hasAlreadyBook", hasAlreadyBook);
+        model.addAttribute("hasNotAlreadyBook", hasNotAlreadyBook);
         model.addAttribute("photoEntities", photoEntities);
         model.addAttribute("serviceEntities", serviceEntities);
         model.addAttribute("constraintEntities", constraintEntities);
         model.addAttribute("starMean", starMean);
+        model.addAttribute("bookingNumber", bookingNumber);
+
         return "view-housing";
     }
 

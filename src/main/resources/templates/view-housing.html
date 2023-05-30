@@ -40,6 +40,8 @@
                       <p class="card-text">Type : <span th:text="${housingEntity.type}"></span></p>
                       <p class="card-text">Localisation : <span th:text="${#strings.concat(housingEntity.addressEntity.city, ', ',housingEntity.addressEntity.country)}"></span></p>
                       <p class="card-text">Note : <span th:text="${starMean}"></span></p>
+                      <p class="card-text">Nombre de réservations : <span th:text="${bookingNumber}"></span></p>
+
                     </div>
                   </div>
                 </div>
@@ -75,8 +77,8 @@
                 </div>
               </div>
               <div class="mt-4" th:if="${userEntity.type == 'User' || (userEntity.type == 'Super' && userEntity != housingEntity.userEntity)}">
-                <a href="#" class="btn btn-outline-primary" th:href="@{/book-housing/{id}(id=${housingEntity.idHousing})}">Réserver</a>
-                <a href="#" class="btn btn-primary" th:href="@{/note-housing/{id}(id=${housingEntity.idHousing})}">Noter</a>
+                <a href="#" class="btn btn-outline-primary" th:if="${!hasNotAlreadyBook}" th:href="@{/book-housing/{id}(id=${housingEntity.idHousing})}">Réserver</a>
+                <a href="#" class="btn btn-primary" th:if="${hasAlreadyBook}" th:href="@{/note-housing/{id}(id=${housingEntity.idHousing})}">Noter</a>
                 <a href="#" class="btn btn-primary" th:href="@{/send-message/{id}(id=${housingEntity.idHousing})}">Contacter</a>
               </div>
             </div>

@@ -19,10 +19,10 @@ public interface MessageRepository extends JpaRepository<MessageEntity, Long> {
     @Query("select u from MessageEntity u where u.housingEntity = :x and u.messageEntity != null")
     List<MessageEntity> findAllWithAnswerByHousing(@Param("x") HousingEntity housingEntity);
 
-    @Query("select u from MessageEntity u where u.userEntity = :x and u.messageEntity = null")
+    @Query("select u from MessageEntity u where u.userEntity = :x and u.messageEntity = null and u.housingEntity != null")
     List<MessageEntity> findAllWithoutAnswerByUser(@Param("x") UserEntity userEntity);
 
-    @Query("select u from MessageEntity u where u.userEntity = :x and u.messageEntity != null")
+    @Query("select u from MessageEntity u where u.userEntity = :x and u.messageEntity != null and u.housingEntity != null")
     List<MessageEntity> findAllWithAnswerByUser(@Param("x") UserEntity userEntity);
 
 }

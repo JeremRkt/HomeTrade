@@ -35,11 +35,7 @@ public class SecurityConfig {
                         .defaultSuccessUrl("/welcome-logged")
                         .permitAll()
                 )
-                .logout(LogoutConfigurer::permitAll)
-                .exceptionHandling()
-                    .accessDeniedPage("/")
-                    .defaultAuthenticationEntryPointFor(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED), new AntPathRequestMatcher("/login"))
-                    .authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/login"));
+                .logout(LogoutConfigurer::permitAll);
         return http.build();
     }
 
