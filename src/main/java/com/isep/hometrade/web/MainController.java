@@ -83,7 +83,7 @@ public class MainController {
     }
 
     @PostMapping("/registration")
-    public String processRegistration(@Valid @ModelAttribute("userDto") UserDto userDto, BindingResult result, Model model, HttpSession session) {
+    public String processRegistration(@Valid @ModelAttribute("userDto") UserDto userDto, BindingResult result, Model model) {
         UserEntity existingUser = userService.findUserByEmail(userDto.getEmail());
         if (existingUser != null) {
             result.rejectValue("email", null, "L'adresse e-mail saisie est déjà associée à un compte !");
@@ -92,12 +92,12 @@ public class MainController {
             model.addAttribute("userDto", userDto);
             return "registration";
         }
-        userService.saveUser(userDto);
+        userService.saveUser(userDto, false);
         return "redirect:/registration?success";
     }
 
     @GetMapping("/search")
-    public String search(Model model, @RequestParam("city") String city, @RequestParam("country") String country, HttpSession session, Authentication authentication) {
+    public String search(Model model, @RequestParam("city") String city, @RequestParam("country") String country, HttpSession session) {
         List<HousingEntity> searchHousingEntities = new ArrayList<>();
         if (!city.isEmpty() || !country.isEmpty()) {
             if (!city.isEmpty() && !country.isEmpty()) {

@@ -28,13 +28,17 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public UserEntity saveUser(UserDto userDto) {
+    public UserEntity saveUser(UserDto userDto, boolean isAdmin) {
         UserEntity userEntity = new UserEntity();
         userEntity.setFirstname(userDto.getFirstname());
         userEntity.setLastname(userDto.getLastname());
         userEntity.setEmail(userDto.getEmail());
         userEntity.setPassword(passwordEncoder.encode(userDto.getPassword()));
-        userEntity.setType("User");
+        if(isAdmin) {
+            userEntity.setType("Admin");
+        } else {
+            userEntity.setType("User");
+        }
         userRepository.save(userEntity);
         return userEntity;
     }

@@ -1,0 +1,24 @@
+version: '3'
+services:
+  mysql:
+    image: mysql:8
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: ${DB_NAME}
+    volumes:
+      - ./handimapper-db:/var/lib/mysql
+    ports:
+      - "${BDD_EXTERNAL_PORT}:${BDD_NETWORK_PORT}"
+  api:
+    build: ./
+    ports:
+      - "${API_EXTERNAL_PORT}:${API_NETWORK_PORT}"
+    depends_on:
+      - mysql
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:${BDD_NETWORK_PORT}/${DB_NAME}?createDatabaseIfNotExist=true&useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
+      SPRING_DATASOURCE_USERNAME: ${DB_USER}
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      API_PORT: ${API_EXTERNAL_PORT}
